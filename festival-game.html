@@ -1,0 +1,2742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HEADLINER</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #f5f0e8; --accent: #e85c00; --accent2: #ffd600;
+  --panel: #1c1c1c; --border: #333; --tlight: #888;
+  --grass: #4a7c3f; --grass2: #3a6230;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: #111; color: var(--cream); overflow: hidden; height: 100vh; }
+
+/* ── SCREENS ── */
+.screen { display: none; height: 100vh; flex-direction: column; overflow: hidden; }
+.screen.active { display: flex; }
+
+/* ── SETUP ── */
+#setup { background: radial-gradient(ellipse at 30% 40%, #1a3516 0%, #0a140a 70%, #111 100%);
+  align-items: center; justify-content: center; }
+.setup-card { background: #161616; border: 1px solid #2a2a2a; border-radius: 6px;
+  padding: 48px 52px; max-width: 500px; width: 92%;
+  box-shadow: 0 0 60px rgba(0,0,0,.8), 0 0 0 1px rgba(232,92,0,.08); }
+.logo { font-family: 'Bebas Neue', sans-serif; font-size: 68px; letter-spacing: 4px; line-height: 1; }
+.tagline { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 3px;
+  color: var(--accent); text-transform: uppercase; margin-bottom: 36px; }
+.slabel { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--tlight); margin-bottom: 10px; }
+.sgroup { margin-bottom: 26px; }
+.cnt-btns { display: flex; gap: 8px; }
+.cnt-btn { background: #1a1a1a; border: 1px solid #333; color: var(--cream);
+  font-family: 'Space Mono', monospace; font-size: 13px; padding: 8px 18px;
+  cursor: pointer; border-radius: 3px; transition: all .15s; }
+.cnt-btn:hover, .cnt-btn.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.pinputs { display: flex; flex-direction: column; gap: 7px; }
+.prow { display: flex; align-items: center; gap: 10px; }
+.pdot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+.pinput { background: #1a1a1a; border: 1px solid #2d2d2d; border-radius: 3px;
+  color: var(--cream); font-family: 'DM Sans', sans-serif; font-size: 14px;
+  padding: 9px 13px; flex: 1; outline: none; transition: border-color .2s; }
+.pinput:focus { border-color: var(--accent); }
+.start-btn { width: 100%; background: var(--accent); border: none; color: #fff;
+  font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 3px;
+  padding: 15px; cursor: pointer; border-radius: 3px; margin-top: 6px; transition: all .2s; }
+.start-btn:hover { background: #c94d00; transform: translateY(-1px); }
+
+/* ── TOP BAR ── */
+.topbar { background: var(--panel); border-bottom: 1px solid var(--border);
+  padding: 0 18px; height: 50px; display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
+.tlogo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; color: var(--accent); }
+.ymono { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--tlight); letter-spacing: 1px; }
+.ypips { display: flex; gap: 5px; align-items: center; }
+.ypip { width: 7px; height: 7px; border-radius: 50%; background: #333; }
+.ypip.done { background: var(--accent2); }
+.ypip.now { background: var(--accent); }
+.tsep { width: 1px; height: 22px; background: #2d2d2d; }
+.turninfo { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.pbadge { display: flex; align-items: center; gap: 7px; background: #222; border: 1px solid #2d2d2d;
+  border-radius: 20px; padding: 4px 12px 4px 7px; font-size: 12px; font-weight: 500; }
+.pdot2 { width: 9px; height: 9px; border-radius: 50%; }
+.phasebadge { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--accent); background: rgba(232,92,0,.1);
+  border: 1px solid rgba(232,92,0,.3); border-radius: 20px; padding: 3px 10px; }
+.hexbadge { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--accent2);
+  background: rgba(255,214,0,.08); border: 1px solid rgba(255,214,0,.25); border-radius: 20px; padding: 3px 10px; }
+.endbtn { background: var(--accent); border: none; color: #fff;
+  font-family: 'Bebas Neue', sans-serif; font-size: 15px; letter-spacing: 2px;
+  padding: 7px 18px; border-radius: 3px; cursor: pointer; transition: all .15s; flex-shrink: 0; }
+.endbtn:hover { background: #c94d00; }
+.endbtn.soft { background: #2d1a0d; color: #7a4020; border: 1px solid #3d2010; }
+.endbtn.soft:hover { background: #3d2010; color: #aa6030; }
+
+/* ── STEP BAR ── */
+.stepbar { background: rgba(232,92,0,.05); border-bottom: 1px solid rgba(232,92,0,.12);
+  padding: 5px 20px; text-align: center; flex-shrink: 0; }
+.steprow { display: flex; align-items: center; gap: 7px; justify-content: center; }
+.stp { width: 18px; height: 18px; border-radius: 50%; border: 1px solid #333; background: #1a1a1a;
+  font-family: 'Space Mono', monospace; font-size: 8px; display: flex; align-items: center;
+  justify-content: center; color: #444; flex-shrink: 0; }
+.stp.done { background: #2a4f22; border-color: var(--grass); color: var(--cream); }
+.stp.now { background: var(--accent); border-color: var(--accent); color: #fff; }
+.stpline { width: 18px; height: 1px; background: #2d2d2d; }
+.stplabel { font-family: 'Space Mono', monospace; font-size: 9px; color: #555; margin-left: 8px; }
+
+/* ── LAYOUT ── */
+.layout { display: grid; grid-template-columns: 190px 1fr 230px; flex: 1; overflow: hidden; min-height: 0; }
+
+/* ── LEFT ── */
+.left { background: var(--panel); border-right: 1px solid var(--border); overflow-y: auto; padding: 10px; }
+.ptitle { font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: 2px;
+  text-transform: uppercase; color: #555; padding: 0 4px; margin-bottom: 8px; }
+.pcard { background: #1e1e1e; border: 1px solid #272727; border-radius: 3px;
+  padding: 9px 11px; margin-bottom: 7px; cursor: pointer; transition: border-color .15s; }
+.pcard:hover { border-color: #444; }
+.pcard.active { border-color: var(--pc) !important; }
+.pcard.viewing { border-color: #444; background: #242424; }
+.pcname { font-weight: 600; font-size: 12px; display: flex; align-items: center; gap: 6px; margin-bottom: 5px; }
+.pcstats { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; }
+.pcstat { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--tlight); }
+.pcstat b { color: var(--cream); }
+.pcbadge { font-family: 'Space Mono', monospace; font-size: 7px; background: var(--accent);
+  color: #fff; padding: 2px 5px; border-radius: 8px; margin-left: auto; letter-spacing: 1px; }
+.amini { display: flex; gap: 3px; flex-wrap: wrap; margin-top: 5px; }
+.apip { font-size: 9px; background: #252525; border-radius: 2px; padding: 2px 4px; color: #aaa; }
+
+/* ── CENTER ── */
+.center { display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+.tabs { display: flex; background: #161616; border-bottom: 1px solid var(--border); padding: 0 14px; }
+.tab { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--tlight); padding: 10px 13px; cursor: pointer;
+  border-bottom: 2px solid transparent; transition: all .15s; }
+.tab:hover { color: var(--cream); }
+.tab.on { color: var(--cream); border-bottom-color: var(--accent); }
+.boardarea { flex: 1; overflow: hidden; display: flex; align-items: center;
+  justify-content: center; padding: 10px; background: #121212; min-height: 0; }
+
+/* ── HAND BAR (bottom of center) ── */
+.handbar { background: #161616; border-top: 1px solid var(--border); padding: 8px 14px; flex-shrink: 0; min-height: 60px; }
+.handbar-title { font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: 2px; text-transform: uppercase; color: #555; margin-bottom: 7px; display: flex; align-items: center; gap: 8px; }
+.handbar-cards { display: flex; gap: 8px; flex-wrap: wrap; }
+.hcard { background: var(--cream); border-radius: 4px; padding: 8px 10px; color: #1a1a1a; border: 2px solid transparent; min-width: 110px; max-width: 140px; position: relative; transition: all .12s; flex-shrink: 0; }
+.hcard:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,.5); }
+.hcard-name { font-family: 'Bebas Neue', sans-serif; font-size: 15px; letter-spacing: .5px; line-height: 1.1; }
+.hcard-genre { font-size: 8px; color: #777; font-family: 'Space Mono', monospace; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+.hcard-reqs { display: flex; flex-wrap: wrap; gap: 2px; margin-bottom: 4px; }
+.hcard-bot { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }
+.hcard-vp { font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700; color: var(--accent); }
+.hcard-play { font-family: 'Space Mono', monospace; font-size: 8px; background: var(--accent); color: #fff; border: none; border-radius: 2px; padding: 3px 6px; cursor: pointer; letter-spacing: .5px; }
+.hcard-play:disabled { background: #ccc; cursor: not-allowed; }
+.hcard-empty { font-size: 10px; color: #333; font-style: italic; font-family: 'Space Mono', monospace; padding: 4px 0; }
+.hcard-bonus { background: #1a1600; border: 1.5px solid rgba(255,214,0,0.3) !important; color: var(--cream); position: relative; }
+.hcard-bonus:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(255,214,0,0.15); }
+
+/* ── OBJECTIVES SIDEBAR ── */
+.objsidebar { background: var(--panel); border-left: 1px solid var(--border); overflow-y: auto; padding: 10px 11px; }
+.objtitle { font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: 2px; text-transform: uppercase; color: #555; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid #222; }
+.obj-council { background: #181828; border: 1px solid #252550; border-radius: 3px; padding: 8px 9px; margin-bottom: 7px; }
+.obj-legacy { background: #181818; border: 1px solid #2d2d2d; border-radius: 3px; padding: 8px 9px; margin-bottom: 6px; }
+.obj-name { font-family: 'Bebas Neue', sans-serif; font-size: 13px; color: var(--accent2); margin-bottom: 2px; line-height: 1.1; }
+.obj-desc { font-size: 9px; color: var(--tlight); line-height: 1.5; margin-bottom: 4px; }
+.obj-reward { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--accent); font-weight: 700; }
+.obj-progress { display: flex; gap: 3px; flex-wrap: wrap; margin-top: 5px; }
+.obj-pip { font-size: 8px; font-family: 'Space Mono', monospace; padding: 2px 5px; border-radius: 2px; border: 1px solid #2d2d2d; color: #444; background: rgba(255,255,255,.02); }
+.obj-pip.met { background: rgba(46,204,113,.1); border-color: #2ecc71; color: #2ecc71; }
+.obj-pip.claimed { background: rgba(255,214,0,.1); border-color: #ffd600; color: #ffd600; }
+
+/* ── RIGHT ── */
+.right { background: var(--panel); border-left: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+.rsec { padding: 11px 13px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.rsec.grow { flex: 1; overflow-y: auto; }
+.rsectitle { font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: 2px;
+  text-transform: uppercase; color: #555; margin-bottom: 7px; }
+
+/* ── ARTIST STRIP (horizontal, above board) ── */
+.artist-strip { background: #131313; border-bottom: 1px solid #222; padding: 8px 12px; flex-shrink: 0; }
+.artist-strip-header { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+.artist-strip-title { font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: 2px;
+  text-transform: uppercase; color: #555; }
+.artist-strip-cards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; }
+/* Compact horizontal artist card */
+.acard-h { background: #f5f0e8; border-radius: 6px; padding: 9px 10px 8px; color: #1a1a1a;
+  border: 2px solid transparent; transition: all .12s; position: relative; display: flex; flex-direction: column; }
+.acard-h:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,.5); }
+.acard-h.dim { opacity: .4; }
+.acard-h.dim:hover { transform: none; box-shadow: none; }
+.ach-name { font-family: 'Bebas Neue', sans-serif; font-size: 17px; letter-spacing: .3px; line-height: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ach-genre { font-size: 7px; color: #888; font-family: 'Space Mono', monospace; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 5px; }
+.ach-stats { display: flex; gap: 3px; margin-bottom: 5px; }
+.ach-stat { display: flex; flex-direction: column; align-items: center; background: rgba(0,0,0,0.06); border-radius: 3px; padding: 4px 5px 3px; flex: 1; }
+.ach-stat-lbl { font-family: 'Space Mono', monospace; font-size: 5.5px; color: #888; text-transform: uppercase; letter-spacing: .3px; margin-bottom: 1px; }
+.ach-stat-val { font-family: 'Bebas Neue', sans-serif; font-size: 17px; color: #1a1a1a; line-height: 1; }
+.ach-stat-val.vp { color: var(--accent); }
+.ach-stat-val.tk { color: #2a6e2a; }
+.ach-cost { display: flex; gap: 3px; flex-wrap: wrap; margin-bottom: 5px; min-height: 18px; }
+.ach-cost-item { font-family: 'Space Mono', monospace; font-size: 9px; padding: 2px 5px; border-radius: 2px; background: rgba(0,0,0,0.06); color: #555; }
+.ach-cost-item.met { background: rgba(46,140,46,0.1); color: #1a5c1a; }
+.ach-cost-item.need { background: rgba(220,60,60,0.09); color: #8b2020; }
+.ach-eff { font-size: 8px; font-family: 'Space Mono', monospace; background: #1a1a1a; color: #ffd600;
+  border-radius: 3px; padding: 4px 7px; cursor: help; display: flex; align-items: center; gap: 4px;
+  margin-bottom: 6px; white-space: nowrap; overflow: hidden; }
+.ach-eff-icon { font-size: 11px; flex-shrink: 0; }
+.ach-eff-name { overflow: hidden; text-overflow: ellipsis; font-size: 8px; letter-spacing: .2px; font-weight: 600; min-width: 0; }
+.ach-meeples { display: flex; gap: 2px; flex-wrap: wrap; margin-bottom: 4px; min-height: 12px; }
+.ach-btns { display: flex; gap: 4px; margin-top: auto; }
+.ach-btn { flex: 1; padding: 6px 4px; border-radius: 3px; font-family: 'Space Mono', monospace;
+  font-size: 8px; font-weight: 700; letter-spacing: .3px; text-transform: uppercase; cursor: pointer; border: 1px solid; text-align: center; transition: all .1s; white-space: nowrap; }
+.ach-btn:disabled { opacity: .3; cursor: not-allowed; }
+
+/* ── DICE STRIP (below artist strip) ── */
+.dice-strip { background: #111; border-bottom: 2px solid #1e1e1e; padding: 6px 14px; flex-shrink: 0;
+  display: flex; align-items: center; gap: 10px; }
+.dice-strip-label { font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: 2px;
+  text-transform: uppercase; color: #444; flex-shrink: 0; }
+
+/* ── ARTIST CARDS ── */
+.acard { background: #f5f0e8; border-radius: 7px; padding: 13px 13px 11px; color: #1a1a1a;
+  cursor: pointer; border: 2px solid transparent; transition: all .12s; margin-bottom: 9px; position: relative; }
+.acard:hover { transform: translateX(-2px); box-shadow: 3px 0 12px rgba(0,0,0,.4); }
+.acard.dim { opacity: .4; cursor: not-allowed; }
+.acard.dim:hover { transform: none; box-shadow: none; }
+.acname { font-family: 'Bebas Neue', sans-serif; font-size: 21px; letter-spacing: .5px; line-height: 1; margin-bottom: 2px; }
+.acgenre { font-size: 9px; color: #999; font-family: 'Space Mono', monospace; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 9px; }
+/* Top stats row: VP + Fame + Sales in 3 equal columns */
+.acstats-top { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; margin-bottom: 8px; }
+.acstat { display: flex; flex-direction: column; align-items: center; background: rgba(0,0,0,0.05); border-radius: 4px; padding: 6px 4px 4px; }
+.acstat-label { font-family: 'Space Mono', monospace; font-size: 6.5px; color: #999; letter-spacing: .5px; text-transform: uppercase; line-height: 1; margin-bottom: 3px; }
+.acstat-val { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: #1a1a1a; line-height: 1; }
+.acstat-val.vp { color: var(--accent); }
+.acstat-val.tickets { color: #2a6e2a; }
+/* Cost row: 4 amenity icons with quantities */
+.accost-row { display: flex; gap: 5px; margin-bottom: 8px; flex-wrap: wrap; }
+.accost-item { display: flex; align-items: center; gap: 3px; background: rgba(0,0,0,0.05); border-radius: 3px; padding: 3px 7px 3px 5px; font-family: 'Space Mono', monospace; font-size: 10px; color: #555; }
+.accost-item.needed { background: rgba(220,60,60,0.08); color: #8b2020; }
+.accost-item.met { background: rgba(46,140,46,0.09); color: #1a5c1a; }
+.accost-icon { font-size: 13px; line-height: 1; }
+.accost-val { font-size: 11px; font-weight: 700; }
+.aceffect-badge { font-size: 9px; font-family: 'Space Mono', monospace; background: #1a1a1a; color: #ffd600;
+  border-radius: 4px; padding: 6px 9px; cursor: help; display: inline-flex; align-items: center; gap: 6px;
+  margin-bottom: 8px; width: 100%; box-sizing: border-box; }
+.aceffect-badge-icon { font-size: 14px; flex-shrink: 0; }
+.aceffect-badge-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; letter-spacing: .3px; font-weight: 600; }
+.acbot { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 7px; }
+.acvp { font-family: 'Bebas Neue', sans-serif; font-size: 26px; color: var(--accent); line-height: 1; }
+.acstg-badge { font-family: 'Space Mono', monospace; font-size: 9px; padding: 3px 7px; border-radius: 3px; background: rgba(0,0,0,0.08); color: #777; }
+.rtag { font-size: 9px; font-family: 'Space Mono', monospace; padding: 3px 6px; border-radius: 3px; background: #e8e0d0; color: #666; }
+.rtag.met { background: #d4edda; color: #2d6a4f; }
+.rtag.unmet { background: #f8d7da; color: #721c24; }
+/* Tooltip */
+.tip { position: fixed; z-index: 9999; max-width: 250px; background: #0d0d0d; border: 1px solid #ffd600; border-radius: 7px; padding: 12px 14px; pointer-events: none; opacity: 0; transition: opacity .15s; }
+.tip.show { opacity: 1; }
+.tip-name { font-family: 'Bebas Neue', sans-serif; font-size: 16px; color: #ffd600; margin-bottom: 6px; display: flex; align-items: center; gap: 7px; }
+.tip-desc { font-family: 'Space Mono', monospace; font-size: 10px; color: #c0c0c0; line-height: 1.7; }
+
+/* ── HAND ── */
+.hcard { background: #f5f0e8; border-radius: 3px; padding: 7px 9px; color: #1a1a1a;
+  border: 2px solid transparent; margin-bottom: 5px; }
+.hcname { font-family: 'Bebas Neue', sans-serif; font-size: 14px; }
+.hcvp { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--accent); font-weight: 700; }
+.bookbtn { font-size: 9px; font-family: 'Space Mono', monospace; padding: 3px 7px; border-radius: 2px;
+  border: 1px solid rgba(232,92,0,.4); cursor: pointer; background: rgba(232,92,0,.1);
+  color: var(--cream); transition: all .12s; margin-right: 3px; margin-top: 3px; }
+.bookbtn:hover:not(:disabled) { background: rgba(232,92,0,.25); }
+.bookbtn:disabled { opacity: .3; cursor: not-allowed; background: transparent; border-color: #333; color: #555; }
+
+/* ── DICE ── */
+.dicetitle { font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: 2px;
+  text-transform: uppercase; color: #555; margin-bottom: 7px; }
+.dicerow { display: flex; gap: 7px; flex-wrap: wrap; align-items: center; }
+.die { width: 42px; height: 42px; border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  font-size: 20px; cursor: pointer; border: 2px solid #555; background: #f0ebe0;
+  box-shadow: 0 2px 5px rgba(0,0,0,.4); transition: all .12s; flex-shrink: 0; }
+.die:hover:not(.used) { transform: translateY(-2px) rotate(-5deg); box-shadow: 0 4px 10px rgba(0,0,0,.5); }
+.die.sel { border-color: var(--accent2); box-shadow: 0 0 0 2px var(--accent2); transform: translateY(-3px); }
+.die.used { opacity: .25; cursor: not-allowed; font-size: 11px; color: #555; }
+.rerollbtn { background: #1e1e1e; border: 1px solid #3d3d3d; color: var(--tlight);
+  font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: 1px; padding: 5px 9px;
+  border-radius: 3px; cursor: pointer; text-transform: uppercase; transition: all .12s; }
+.rerollbtn:hover { border-color: var(--accent2); color: var(--accent2); }
+.dicehint { font-family: 'Space Mono', monospace; font-size: 8px; color: #444; margin-top: 6px; }
+
+/* ── LOG ── */
+.logarea { padding: 7px 13px; border-top: 1px solid var(--border); flex: 1; overflow-y: auto; min-height: 0; }
+.logline { font-size: 9px; color: var(--tlight); font-family: 'Space Mono', monospace; margin-bottom: 2px; line-height: 1.5; }
+
+/* ── END ── */
+#endscreen { background: radial-gradient(ellipse at center,#1a1200 0%,#0d0900 60%,#111 100%); align-items: center; justify-content: center; }
+.endcard { background: #1a1a1a; border: 1px solid #333; border-radius: 5px; padding: 44px; max-width: 560px; width: 90%; text-align: center; }
+.endtitle { font-family: 'Bebas Neue', sans-serif; font-size: 52px; letter-spacing: 4px; color: var(--accent2); margin-bottom: 6px; }
+.endwinner { font-size: 17px; margin-bottom: 28px; }
+.stbl { width: 100%; border-collapse: collapse; margin-bottom: 28px; }
+.stbl th { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--tlight); padding: 7px 11px; border-bottom: 1px solid #2d2d2d; text-align: left; }
+.stbl td { padding: 9px 11px; font-size: 13px; border-bottom: 1px solid #1e1e1e; }
+.stbl tr.win td { color: var(--accent2); font-weight: 700; }
+.again { background: var(--accent); border: none; color: #fff; font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 3px; padding: 13px 36px; border-radius: 3px; cursor: pointer; }
+
+/* ── MODAL ── */
+.moverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.75); z-index: 999; align-items: center; justify-content: center; }
+.moverlay.open { display: flex; }
+.mbox { background: #1c1c1c; border: 1px solid #333; border-radius: 5px; padding: 26px; max-width: 380px; width: 90%; }
+.mtitle { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 2px; margin-bottom: 9px; }
+.mbody { font-size: 12px; color: var(--tlight); line-height: 1.7; margin-bottom: 16px; }
+.mbtns { display: flex; gap: 9px; }
+.mbtn { flex: 1; background: #1e1e1e; border: 1px solid #333; color: var(--cream); font-family: 'Space Mono', monospace; font-size: 10px; padding: 9px; border-radius: 3px; cursor: pointer; }
+.mbtn.ok { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* ── STAGE/OBJECTIVES ── */
+.stageslot { background: #161624; border: 1px solid #252550; border-radius: 3px; padding: 8px 10px; margin-bottom: 7px; }
+.stageslot.locked { opacity: .35; border-style: dashed; }
+.slotheader { font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase; color: #6060aa; margin-bottom: 4px; display: flex; justify-content: space-between; }
+.objcard { background: #181818; border: 1px solid #2d2d2d; border-radius: 3px; padding: 8px 10px; margin-bottom: 6px; }
+.objname { font-family: 'Bebas Neue', sans-serif; font-size: 14px; color: var(--accent2); margin-bottom: 2px; }
+.objdesc { font-size: 10px; color: var(--tlight); line-height: 1.5; }
+.objvp { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--accent); margin-top: 3px; font-weight: 700; }
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: #111; }
+::-webkit-scrollbar-thumb { background: #2d2d2d; border-radius: 2px; }
+
+.ticket-bubbles { display: flex; gap: 6px; align-items: center; }
+.ticket-bubble { display: flex; align-items: center; gap: 7px; border-radius: 24px; padding: 4px 14px 4px 10px; border: 1px solid; min-width: 80px; }
+.ticket-bubble.sales { background: rgba(255,214,0,.1); border-color: rgba(255,214,0,.4); }
+.ticket-bubble.bid   { background: rgba(232,92,0,.1);  border-color: rgba(232,92,0,.35); }
+.tb-icon { font-size: 18px; line-height: 1; }
+.tb-label { font-family: 'Space Mono', monospace; font-size: 7px; letter-spacing: 1.5px; text-transform: uppercase; color: #666; line-height: 1; margin-bottom: 1px; }
+.tb-val { font-family: 'Bebas Neue', sans-serif; font-size: 22px; line-height: 1; color: var(--cream); }
+.ticket-bubble.sales .tb-val { color: var(--accent2); }
+.ticket-bubble.bid   .tb-val { color: var(--accent); }
+
+/* ── HANDOFF OVERLAY ── */
+.handoff-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.88); z-index:8000;
+  display:flex; align-items:center; justify-content:center; opacity:0;
+  transition: opacity .3s; pointer-events:none; }
+.handoff-overlay.show { opacity:1; pointer-events:all; }
+.handoff-card { text-align:center; padding:48px 64px; }
+.handoff-turn { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px;
+  text-transform:uppercase; color:#444; margin-bottom:12px; }
+.handoff-name { font-family:'Bebas Neue',sans-serif; font-size:72px; letter-spacing:4px;
+  line-height:1; margin-bottom:4px; }
+.handoff-sub { font-family:'Space Mono',monospace; font-size:11px; color:#555;
+  letter-spacing:2px; text-transform:uppercase; margin-bottom:40px; }
+.handoff-go { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:4px;
+  background:var(--accent); border:none; color:#fff; padding:14px 52px; border-radius:4px;
+  cursor:pointer; transition:all .15s; }
+.handoff-go:hover { background:#c94d00; transform:translateY(-2px); }
+
+/* ── TOAST NOTIFICATIONS ── */
+#toast-container { position:fixed; bottom:24px; right:24px; z-index:9000;
+  display:flex; flex-direction:column-reverse; gap:8px; pointer-events:none; }
+.toast { background:#1a1a1a; border:1px solid #333; border-radius:6px; padding:10px 16px;
+  font-family:'Space Mono',monospace; font-size:10px; color:var(--cream); max-width:300px;
+  opacity:0; transform:translateX(20px); transition:all .25s; pointer-events:none;
+  display:flex; align-items:center; gap:10px; line-height:1.4; }
+.toast.show { opacity:1; transform:translateX(0); }
+.toast.vp { border-color:var(--accent); }
+.toast.bid { border-color:var(--accent2); color:var(--accent2); }
+.toast.obj { border-color:#4caf50; color:#4caf50; }
+.toast.refresh { border-color:#555; }
+.toast-icon { font-size:16px; flex-shrink:0; }
+
+</style>
+</head>
+<body>
+
+<!-- SETUP -->
+<div id="setup" class="screen active">
+  <div class="setup-card">
+    <div class="logo">HEADLINER</div>
+    <div class="tagline">The Festival Board Game</div>
+    <div class="sgroup">
+      <div class="slabel">Number of Players</div>
+      <div class="cnt-btns">
+        <button class="cnt-btn" onclick="setN(2,this)">2</button>
+        <button class="cnt-btn on" onclick="setN(3,this)">3</button>
+        <button class="cnt-btn" onclick="setN(4,this)">4</button>
+        <button class="cnt-btn" onclick="setN(5,this)">5</button>
+      </div>
+    </div>
+    <div class="sgroup">
+      <div class="slabel">Festival Names</div>
+      <div class="pinputs" id="pinputs"></div>
+    </div>
+    <button class="start-btn" onclick="startGame()">🎸 OPEN THE GATES</button>
+  </div>
+</div>
+
+<!-- GAME -->
+<div id="game" class="screen">
+  <div class="topbar">
+    <div class="tlogo">HEADLINER</div>
+    <div class="ymono">YEAR</div>
+    <div class="ypips" id="ypips"></div>
+    <div class="tsep"></div>
+    <div class="ymono" id="rlabel"></div>
+    <div class="turninfo">
+      <div class="hexbadge" id="hexbadge">⬡ 5</div>
+      <div class="phasebadge" id="phasebadge">PLACE TILE</div>
+      <div class="ticket-bubbles">
+        <div class="ticket-bubble sales" id="ticketsales"><span class="tb-icon">🎫</span><div><div class="tb-label">SALES</div><div class="tb-val" id="tb-sales">0</div></div></div>
+        <div class="ticket-bubble bid" id="ticketbid"><span class="tb-icon">🎟️</span><div><div class="tb-label">BID</div><div class="tb-val" id="tb-bid">0</div></div></div>
+      </div>
+      <div class="pbadge">
+        <div class="pdot2" id="pdot"></div>
+        <span id="pname">—</span>
+      </div>
+      <button class="endbtn" id="endbtn" onclick="tryEndTurn()">END TURN →</button>
+    </div>
+  </div>
+  <div class="stepbar">
+    <div class="steprow" id="steprow"></div>
+  </div>
+  <div class="layout">
+    <div class="left">
+      <div class="ptitle">Festivals</div>
+      <div id="plist"></div>
+    </div>
+    <div class="center">
+      <!-- Artist strip: 5 acts side by side at the top -->
+      <div class="artist-strip" id="artist-strip-wrap">
+        <div class="artist-strip-header">
+          <div class="artist-strip-title">🎵 Available Artists <span id="poolcount" style="color:#444"></span></div>
+          <div style="font-size:7px;color:#333;font-family:'Space Mono',monospace;margin-left:auto">🎤 Book direct · 🕴 Approach any act regardless of fame</div>
+        </div>
+        <div class="artist-strip-cards" id="apool"></div>
+      </div>
+      <!-- Dice strip: always visible below artists -->
+      <div class="dice-strip">
+        <div class="dice-strip-label">🎲 Dice</div>
+        <div class="dicerow" id="dicerow" style="flex:1"></div>
+        <div class="dicehint" id="dicehint" style="flex-shrink:0;margin-top:0;margin-left:6px"></div>
+      </div>
+      <div class="tabs">
+        <div class="tab on" id="tab-festival" onclick="setTab('festival')">🌿 Festival</div>
+        <div class="tab" id="tab-stages" onclick="setTab('stages')">🎤 Lineup</div>
+        <div class="tab" id="tab-rules" onclick="setTab('rules')">📋 Rules</div>
+      </div>
+      <div class="boardarea" id="boardarea"></div>
+      <div class="handbar">
+        <div class="handbar-title">🤚 Hand <span id="handcount" style="color:#444;font-size:8px"></span><span style="margin-left:auto;font-size:8px;color:#444" id="handplayhint"></span></div>
+        <div class="handbar-cards" id="handarea"></div>
+      </div>
+    </div>
+    <div class="right">
+      <div class="logarea" id="logarea" style="flex:1;border-top:none"></div>
+    </div>
+    <div class="objsidebar">
+      <div class="objtitle">🏅 Council Objective</div>
+      <div id="obj-council-panel"></div>
+      <div class="objtitle" style="margin-top:12px">🏆 Legacy Objectives</div>
+      <div id="obj-legacy-panel"></div>
+    </div>
+  </div>
+</div>
+
+<!-- HANDOFF OVERLAY -->
+<div class="handoff-overlay" id="handoff-overlay">
+  <div class="handoff-card">
+    <div class="handoff-turn" id="handoff-turn"></div>
+    <div class="handoff-name" id="handoff-name"></div>
+    <div class="handoff-sub" id="handoff-sub">YOUR TURN</div>
+    <button class="handoff-go" onclick="dismissHandoff()">LET'S GO →</button>
+  </div>
+</div>
+<!-- TOAST CONTAINER -->
+<div id="toast-container"></div>
+
+<!-- END -->
+<div id="endscreen" class="screen">
+  <div class="endcard">
+    <div class="endtitle">FESTIVAL'S OVER</div>
+    <div class="endwinner" id="endwinner"></div>
+    <table class="stbl" id="scoretbl"></table>
+    <button class="again" onclick="location.reload()">PLAY AGAIN</button>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="moverlay" id="modal">
+  <div class="mbox">
+    <div class="mtitle" id="mtitle"></div>
+    <div class="mbody" id="mbody"></div>
+    <div class="mbtns" id="mbtns"></div>
+  </div>
+</div>
+
+<!-- TOOLTIP -->
+<div class="tip" id="tooltip"><div class="tip-name" id="tip-name"></div><div class="tip-desc" id="tip-desc"></div></div>
+
+<script>
+// ════════════════════════════════════════
+//  CONSTANTS
+// ════════════════════════════════════════
+const COLORS = ['#e85c00','#3498db','#2ecc71','#e91e63','#f39c12'];
+const DNAMES  = ['Sunburn Festival','Mudfield','Neon Meadows','Crystal Pines','The Bash'];
+
+const AMENITIES = [
+  {id:'portaloo', name:'Portaloos',    icon:'🚽'},
+  {id:'catering', name:'Catering Van', icon:'🍔'},
+  {id:'camping',  name:'Camping Tent', icon:'⛺'},
+  {id:'security', name:'Security',     icon:'🦺'},
+];
+
+const DECK = [
+  {id:'a1',name:'Kara Okay',genre:'Pop',reqs:{},vp:1,fame:0,stg:1,tickets:3,effect:null},
+  {id:'a2',name:'Sadchild',genre:'Pop',reqs:{security:1},vp:1,fame:0,stg:1,tickets:5,effect:null},
+  {id:'a3',name:'Mikerophone',genre:'Pop',reqs:{security:1,catering:1},vp:2,fame:1,stg:1,tickets:6,effect:'Gain a Security. Play it this turn.'},
+  {id:'a4',name:'Rebecca Black',genre:'Pop',reqs:{security:1,catering:1},vp:2,fame:1,stg:1,tickets:6,effect:null},
+  {id:'a5',name:'Pitbull',genre:'Pop',reqs:{camping:1,security:1,portaloo:1},vp:2,fame:1,stg:1,tickets:8,effect:'Remix'},
+  {id:'a6',name:'Chappell Roan',genre:'Pop',reqs:{camping:1,security:1},vp:2,fame:2,stg:2,tickets:7,effect:null},
+  {id:'a7',name:'Sabrina Carpenter',genre:'Pop',reqs:{camping:1,security:1},vp:2,fame:2,stg:2,tickets:7,effect:'Stardom'},
+  {id:'a8',name:'RAYE',genre:'Pop',reqs:{camping:1,security:2,portaloo:1},vp:3,fame:2,stg:2,tickets:10,effect:'True Performer'},
+  {id:'a9',name:'Billie Eilish',genre:'Pop',reqs:{camping:1,security:2,portaloo:1},vp:3,fame:3,stg:3,tickets:11,effect:'Stardom'},
+  {id:'a10',name:'Harry Styles',genre:'Pop',reqs:{camping:2,security:3,catering:1,portaloo:2},vp:4,fame:3,stg:3,tickets:19,effect:null},
+  {id:'a11',name:'Beyonce',genre:'Pop',reqs:{camping:2,security:3,catering:2,portaloo:1},vp:5,fame:4,stg:3,tickets:21,effect:'Stage Presence'},
+  {id:'a12',name:'Coldplay',genre:'Pop, Rock',reqs:{camping:4,security:3,catering:1},vp:5,fame:4,stg:3,tickets:21,effect:'Stardom'},
+  {id:'a13',name:'Olivia Dean',genre:'Pop',reqs:{camping:2,security:3,catering:2,portaloo:1},vp:5,fame:4,stg:3,tickets:21,effect:null},
+  {id:'a14',name:'Lady Gaga',genre:'Pop',reqs:{camping:3,security:4,catering:3,portaloo:2},vp:7,fame:5,stg:3,tickets:33,effect:'Gain 1VP for each positive event this round.'},
+  {id:'a15',name:'Sitting Ducks',genre:'Rock',reqs:{},vp:1,fame:0,stg:1,tickets:3,effect:'Rock n Roll'},
+  {id:'a16',name:'Beababdoobee',genre:'Rock',reqs:{portaloo:1},vp:1,fame:1,stg:1,tickets:5,effect:'Gain a Portaloo. Play it this turn.'},
+  {id:'a17',name:'Limp Bizkit',genre:'Rock',reqs:{camping:1,portaloo:1},vp:2,fame:1,stg:1,tickets:6,effect:null},
+  {id:'a18',name:'Wet Leg',genre:'Rock',reqs:{camping:1,security:1,portaloo:1},vp:2,fame:1,stg:1,tickets:8,effect:'Rock n Roll'},
+  {id:'a19',name:'Heart',genre:'Rock',reqs:{security:1,catering:1,portaloo:1},vp:2,fame:2,stg:2,tickets:9,effect:null},
+  {id:'a20',name:'Tame Impala',genre:'Rock',reqs:{camping:1,catering:1,portaloo:1},vp:2,fame:2,stg:2,tickets:9,effect:null},
+  {id:'a21',name:'Weezer',genre:'Rock',reqs:{camping:1,security:1,catering:1,portaloo:1},vp:2,fame:2,stg:2,tickets:10,effect:null},
+  {id:'a22',name:"Pan!c at the Disco",genre:'Rock, Pop',reqs:{camping:1,portaloo:2},vp:4,fame:3,stg:3,tickets:9,effect:'True Performer'},
+  {id:'a23',name:'The Kooks',genre:'Rock',reqs:{camping:1,security:1,catering:1,portaloo:2},vp:3,fame:3,stg:3,tickets:13,effect:null},
+  {id:'a24',name:'Slipknot',genre:'Rock',reqs:{camping:1,security:2,portaloo:2},vp:3,fame:3,stg:3,tickets:13,effect:null},
+  {id:'a25',name:'Olivia Rodrigo',genre:'Rock',reqs:{camping:2,security:1,catering:2,portaloo:3},vp:4,fame:3,stg:3,tickets:19,effect:'Rock n Roll'},
+  {id:'a26',name:'Radiohead',genre:'Rock',reqs:{camping:1,security:2,catering:3,portaloo:3},vp:5,fame:4,stg:3,tickets:24,effect:null},
+  {id:'a27',name:'Arctic Monkeys',genre:'Rock',reqs:{camping:2,security:3,catering:2,portaloo:3},vp:5,fame:3,stg:3,tickets:23,effect:null},
+  {id:'a28',name:'Fleetwood Mac',genre:'Rock',reqs:{camping:3,security:2,catering:3,portaloo:4},vp:7,fame:5,stg:3,tickets:33,effect:'Roll the amenity dice and gain 2VP for each Portaloo shown.'},
+];
+
+// ── COUNCIL OBJECTIVES (private, per-player, tile/amenity focused) ──
+// ── SPATIAL HELPERS for objective checks ──
+function hexDist(r1,c1,r2,c2){
+  // Convert flat-top offset to cube coords
+  function toCube(r,c){ const x=c; const z=r-(c-(c&1))/2; return{x,z,y:-x-z}; }
+  const a=toCube(r1,c1), b=toCube(r2,c2);
+  return Math.max(Math.abs(a.x-b.x),Math.abs(a.y-b.y),Math.abs(a.z-b.z));
+}
+// Get all placed cells with a given amenity type for a player
+function amenityCells(p,type){ const cells=[]; for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) if(p.grid[r][c].placed&&p.grid[r][c].amenity===type) cells.push([r,c]); return cells; }
+// Stage cells that a player has placed tiles on (not the pre-set stage hexes, but adjacent tiles)
+function placedCells(p){ const cells=[]; for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) if(p.grid[r][c].placed&&!p.grid[r][c].stg&&!p.grid[r][c].shadow) cells.push([r,c]); return cells; }
+// Find connected clusters of cells matching a condition
+function findClusters(cells){ const visited=new Set(); const clusters=[]; cells.forEach(([r,c])=>{ const k=r+','+c; if(visited.has(k)) return; const cluster=[[r,c]]; visited.add(k); const q=[[r,c]]; while(q.length){ const [cr,cc]=q.shift(); adjCells(cr,cc).forEach(([nr,nc])=>{ const nk=nr+','+nc; if(!visited.has(nk)&&cells.some(([ar,ac])=>ar===nr&&ac===nc)){ visited.add(nk); cluster.push([nr,nc]); q.push([nr,nc]); } }); } clusters.push(cluster); }); return clusters; }
+
+// ── COUNCIL OBJECTIVES (from Council_Objectives.xlsx) ──
+const COUNCIL_OBJS = [
+  {
+    id:'c1', name:'Keeping the Peace',
+    desc:'Keep at least 1 tile of space between your stage hexes and your festival boundary tiles.',
+    reward:'tickets:2,_per:camping',
+    // Check: all placed tiles are not directly adjacent to any stage hex
+    fn:p=>{
+      const stagePts=STAGE;
+      return placedCells(p).every(([r,c])=>stagePts.every(s=>hexDist(r,c,s.r,s.c)>1));
+    },
+    rewardFn:p=>{ const n=ca(p,'camping'); p.tickets+=n*2; log(`🏅 <b>${p.name}</b> Keeping the Peace → +${n*2} 🎟️ tickets (${n} campsites × 2)`); }
+  },
+  {
+    id:'c2', name:'Sanitation Experts',
+    desc:'All your portaloos must be at least 2 tiles away from every other amenity token.',
+    reward:'tickets:2,_per:portaloo',
+    fn:p=>{
+      const loos=amenityCells(p,'portaloo');
+      if(loos.length===0) return false;
+      const others=[]; for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) if(p.grid[r][c].placed&&p.grid[r][c].amenity&&p.grid[r][c].amenity!=='portaloo') others.push([r,c]);
+      return loos.every(([lr,lc])=>others.every(([or,oc])=>hexDist(lr,lc,or,oc)>=2));
+    },
+    rewardFn:p=>{ const n=ca(p,'portaloo'); p.tickets+=n*2; log(`🏅 <b>${p.name}</b> Sanitation Experts → +${n*2} 🎟️ (${n} portaloos × 2)`); }
+  },
+  {
+    id:'c3', name:'Camp City',
+    desc:'Have a cluster of at least 2 connected campsites.',
+    reward:'vp:1,_per:cluster',
+    fn:p=>{ const cells=amenityCells(p,'camping'); const clusters=findClusters(cells); return clusters.some(cl=>cl.length>=2); },
+    rewardFn:p=>{ const cells=amenityCells(p,'camping'); const clusters=findClusters(cells).filter(cl=>cl.length>=2); p.vp+=clusters.length; log(`🏅 <b>${p.name}</b> Camp City → +${clusters.length} VP (${clusters.length} cluster${clusters.length!==1?'s':''})`); }
+  },
+  {
+    id:'c4', name:'Food Courts',
+    desc:'Have a cluster of at least 2 connected catering tokens.',
+    reward:'tickets:2,_per:catering',
+    fn:p=>{ const cells=amenityCells(p,'catering'); const clusters=findClusters(cells); return clusters.some(cl=>cl.length>=2); },
+    rewardFn:p=>{ const n=ca(p,'catering'); p.tickets+=n*2; log(`🏅 <b>${p.name}</b> Food Courts → +${n*2} 🎟️ (${n} catering × 2)`); }
+  },
+  {
+    id:'c5', name:'Safe Spaces',
+    desc:'Have at least 2 security tokens adjacent to each stage you own.',
+    reward:'tickets:2,_per:security',
+    fn:p=>{
+      if((p.stageCount||1)===0) return false;
+      return STAGE.every(s=>{
+        const secAdj=adjCells(s.r,s.c).filter(([r,c])=>r>=0&&r<ROWS&&c>=0&&c<COLS&&p.grid[r][c].amenity==='security').length;
+        return secAdj>=2;
+      });
+    },
+    rewardFn:p=>{ const n=ca(p,'security'); p.tickets+=n*2; log(`🏅 <b>${p.name}</b> Safe Spaces → +${n*2} 🎟️ (${n} security × 2)`); }
+  },
+  {
+    id:'c6', name:'Quiet Camping',
+    desc:'Have at least one campsite that is 3+ tiles away from all stage hexes.',
+    reward:'tickets:10',
+    fn:p=>{ return amenityCells(p,'camping').some(([r,c])=>STAGE.every(s=>hexDist(r,c,s.r,s.c)>=3)); },
+    rewardFn:p=>{ p.tickets+=10; log(`🏅 <b>${p.name}</b> Quiet Camping → +10 🎟️ tickets`); }
+  },
+];
+
+// ── LEGACY OBJECTIVES (public/competitive, 2 dealt per game) ──
+const LEGACY_OBJS = [
+  {
+    id:'l1', name:'Local Talent',
+    desc:'Play a Fame 0 artist as a headliner on any stage.',
+    reward:'tickets:10',
+    once:false,
+    fn:p=>p.stages.some(arr=>arr.some(s=>s.fame===0)),
+    rewardFn:(p,o)=>{ if(o.claimed.includes(p.i)) return; o.claimed.push(p.i); p.tickets+=10; log(`🏆 <b>${p.name}</b> Local Talent → +10 🎟️`); }
+  },
+  {
+    id:'l2', name:'Popstars',
+    desc:'Fill all your stage slots with Pop genre artists.',
+    reward:'fame:1',
+    once:false,
+    fn:p=>{ const owned=p.stageCount||1; const filled=p.stages.slice(0,owned).filter(arr=>arr.length>0&&arr.every(s=>s.genre==='Pop')); return filled.length===owned; },
+    rewardFn:(p,o)=>{ if(o.claimed.includes(p.i)) return; o.claimed.push(p.i); p.fame=(p.fame||0)+1; log(`🏆 <b>${p.name}</b> Popstars → +1 ⭐ Fame`); }
+  },
+  {
+    id:'l3', name:'Trial by Fyre',
+    desc:'Book no artists during an entire round.',
+    reward:'tickets:20',
+    once:false,
+    fn:p=>p._noArtistRound===true,
+    rewardFn:(p,o)=>{ if(o.claimed.includes(p.i)) return; o.claimed.push(p.i); p.tickets+=20; log(`🏆 <b>${p.name}</b> Trial by Fyre → +20 🎟️`); }
+  },
+];
+
+// ════════════════════════════════════════
+//  EFFECTS  (from Effects.xlsx — will be attached to artists in future)
+//  Each effect triggers at specific moments and modifies gameplay.
+// ════════════════════════════════════════
+const EFFECTS = [
+  {
+    id: 'rock_n_roll',
+    name: 'Rock n Roll',
+    icon: '🎸',
+    desc: 'Name an amenity. Re-roll the Amenity dice and then remove all dice that show the named amenity.',
+    trigger: 'on_play',
+    fn: null
+  },
+  {
+    id: 'stage_presence',
+    name: 'Stage Presence',
+    icon: '👑',
+    desc: "Other players cannot play an artist with a lower Fame level than this artist for the rest of this round.",
+    trigger: 'on_play',
+    fn: null
+  },
+  {
+    id: 'true_performer',
+    name: 'True Performer',
+    icon: '🎤',
+    desc: 'If this artist is placed in the Headliner slot (bottom slot): gain +1 Fame.',
+    trigger: 'on_headliner',
+    fn: (p, art, si) => {
+      const isHeadliner = p.stages[si] && p.stages[si][p.stages[si].length - 1] === art;
+      if (isHeadliner) { p.fame = (p.fame || 0) + 1; log(`🎤 <b>${p.name}</b> True Performer → +1 ⭐ Fame`); }
+    }
+  },
+  {
+    id: 'remix',
+    name: 'Remix',
+    icon: '🔄',
+    desc: 'The next artist booked to this same stage must match this artist\'s genre.',
+    trigger: 'on_play',
+    fn: null
+  },
+  {
+    id: 'mosh_pit',
+    name: 'Mosh Pit',
+    icon: '🤘',
+    desc: 'All players discard one card from their hand into the artist pool. Shuffle them, then each player draws one. Remaining cards stay in the pool.',
+    trigger: 'on_play',
+    fn: null
+  },
+  {
+    id: 'diss_track',
+    name: 'Diss Track',
+    icon: '🎯',
+    desc: 'Choose one artist already booked by an opponent. Gain +1 Fame and sell the same number of tickets as that artist.',
+    trigger: 'on_play',
+    fn: null
+  },
+  {
+    id: 'sample',
+    name: 'Sample',
+    icon: '💿',
+    desc: 'Remove 1 unapproached artist from the available pool. Gain half of their ticket sales (rounded down).',
+    trigger: 'on_play',
+    fn: null
+  },
+  {
+    id: 'stardom',
+    name: 'Stardom',
+    icon: '⭐',
+    desc: 'If this artist is placed in the Headliner slot (bottom slot): gain +1 VP.',
+    trigger: 'on_headliner',
+    fn: (p, art, si) => {
+      const isHeadliner = p.stages[si] && p.stages[si][p.stages[si].length - 1] === art;
+      if (isHeadliner) { p.vp += 1; log(`🌟 <b>${p.name}</b> Stardom → +1 VP`); }
+    }
+  },
+  {
+    id: 'gain_security',
+    name: 'Gain a Security',
+    icon: '🦺',
+    desc: 'Immediately gain a Security amenity token and place it on any of your festival tiles this turn.',
+    trigger: 'on_play',
+    fn: null
+  },
+  {
+    id: 'gain_portaloo',
+    name: 'Gain a Portaloo',
+    icon: '🚽',
+    desc: 'Immediately gain a Portaloo amenity token and place it on any of your festival tiles this turn.',
+    trigger: 'on_play',
+    fn: null
+  },
+];
+
+// Helper: look up effect object by name string (as stored on artist cards)
+function getEffect(name){
+  if(!name) return null;
+  // Direct match first
+  let e = EFFECTS.find(e=>e.name===name);
+  if(e) return e;
+  // Partial / keyword match
+  const n=name.toLowerCase();
+  if(n.includes('security')) return EFFECTS.find(e=>e.id==='gain_security');
+  if(n.includes('portaloo')) return EFFECTS.find(e=>e.id==='gain_portaloo');
+  if(n.includes('rock')) return EFFECTS.find(e=>e.id==='rock_n_roll');
+  if(n.includes('stardom')) return EFFECTS.find(e=>e.id==='stardom');
+  if(n.includes('remix')) return EFFECTS.find(e=>e.id==='remix');
+  if(n.includes('true performer')) return EFFECTS.find(e=>e.id==='true_performer');
+  if(n.includes('stage presence')) return EFFECTS.find(e=>e.id==='stage_presence');
+  if(n.includes('mosh')) return EFFECTS.find(e=>e.id==='mosh_pit');
+  if(n.includes('diss')) return EFFECTS.find(e=>e.id==='diss_track');
+  if(n.includes('sample')) return EFFECTS.find(e=>e.id==='sample');
+  // Fallback: return a generic effect object with the raw text as desc
+  return {icon:'✨', name:'Special', desc: name};
+}
+
+// ── Tooltip ──
+function showTip(event, effectName){
+  const eff=getEffect(effectName);
+  if(!eff) return;
+  const tip=document.getElementById('tooltip');
+  document.getElementById('tip-name').innerHTML=`${eff.icon||'✨'} ${eff.name}`;
+  document.getElementById('tip-desc').textContent=eff.desc;
+  tip.classList.add('show');
+  moveTip(event);
+}
+function moveTip(event){
+  const tip=document.getElementById('tooltip');
+  const x=event.clientX+14, y=event.clientY-10;
+  const tw=tip.offsetWidth||230, th=tip.offsetHeight||80;
+  tip.style.left=Math.min(x, window.innerWidth-tw-8)+'px';
+  tip.style.top=Math.max(8, Math.min(y, window.innerHeight-th-8))+'px';
+}
+function hideTip(){ document.getElementById('tooltip').classList.remove('show'); }
+document.addEventListener('mousemove', e=>{ if(document.getElementById('tooltip').classList.contains('show')) moveTip(e); });
+const S  = 28;
+const HW = S * 2;
+const HH = S * Math.sqrt(3);
+const CS = S * 1.5;
+const RS = HH;
+const ROWS = 16, COLS = 16;
+
+// Stage: 3 hexes in same "row" — (4,7)-(4,8)-(4,9)
+// All three are adjacent: (4,7)↔(4,8) ✓  (4,8)↔(4,9) ✓
+// Due to flat-top hex offset, EVEN col (4,8) sits 24px HIGHER than ODD cols
+// creating a natural arch shape. Players approach from below (higher row numbers).
+// STAGE[1] = centre hex (4,8) = mic position (visually at top/back of arch)
+// STAGE[0] & STAGE[2] = flanks (4,7) and (4,9) = stage front corners
+const STAGE  = [{r:4,c:7},{r:4,c:8},{r:4,c:9}];
+
+// Shadow hexes — backstage area ABOVE (rows 2-3) the stage
+const SHADOW = [
+  {r:3,c:7},{r:2,c:7},
+  {r:3,c:8},{r:2,c:8},
+  {r:3,c:9},{r:2,c:9},
+];
+
+function isStage(r,c)  { return STAGE.some(s=>s.r===r&&s.c===c); }
+function isShadow(r,c) { return SHADOW.some(s=>s.r===r&&s.c===c); }
+
+function hcenter(r,c){
+  return { x: c*CS + S, y: r*RS + HH/2 + (c%2===1 ? HH/2 : 0) };
+}
+
+function hpoly(cx,cy,s){
+  const pts=[];
+  for(let i=0;i<6;i++){
+    const a = i*60*Math.PI/180;
+    pts.push((cx+s*Math.cos(a)).toFixed(2)+','+(cy+s*Math.sin(a)).toFixed(2));
+  }
+  return pts.join(' ');
+}
+
+// Flat-top adjacency (odd-col-down):
+// even col: (r-1,c),(r+1,c),(r,c-1),(r,c+1),(r-1,c-1),(r-1,c+1)
+// odd  col: (r-1,c),(r+1,c),(r,c-1),(r,c+1),(r+1,c-1),(r+1,c+1)
+function adjCells(r,c){
+  return c%2===0
+    ? [[r-1,c],[r+1,c],[r,c-1],[r,c+1],[r-1,c-1],[r-1,c+1]]
+    : [[r-1,c],[r+1,c],[r,c-1],[r,c+1],[r+1,c-1],[r+1,c+1]];
+}
+
+function hasAdjacentPlaced(grid,r,c){
+  return adjCells(r,c).some(([rr,cc])=>rr>=0&&rr<ROWS&&cc>=0&&cc<COLS&&grid[rr][cc].placed);
+}
+
+// ════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════
+let G = {};
+
+function initGrid(){
+  const g=[];
+  for(let r=0;r<ROWS;r++){
+    g[r]=[];
+    for(let c=0;c<COLS;c++){
+      g[r][c]={ r, c,
+        placed: isStage(r,c),
+        stg:    isStage(r,c),
+        shadow: isShadow(r,c),
+        amenity: null
+      };
+    }
+  }
+  return g;
+}
+
+function shuffle(a){
+  const b=[...a];
+  for(let i=b.length-1;i>0;i--){const j=0|Math.random()*(i+1);[b[i],b[j]]=[b[j],b[i]];}
+  return b;
+}
+
+function ca(p,t){ return p.amenities.filter(x=>x===t).length; }
+// Predicted ticket sales: 5 per campsite placed + tickets already earned (stored on p.tickets)
+// We track earned tickets separately from "predicted sales" — predicted is the campsite-based projection
+function predictedTickets(p){ return ca(p,'camping') * 5; }
+function maxHand(p){ let h=3; if(p.amenities.length>=4)h++; if(p.amenities.length>=8)h++; return Math.min(h,5); }
+// Stages are purchased between rounds (3 hexes → 1 stage). p.stageCount tracks how many stages the player has bought.
+function stageLocked(p,i){ return i >= (p.stageCount||1); }
+function playerFame(p){ return p.fame||0; }
+// Fame gates: Fame 0 = Stage1 only, Fame 1 = Stage 1-2, Fame 2+ = all stages
+function fameAllowsStage(p,stg){ const f=playerFame(p); if(stg<=1)return true; if(stg===2)return f>=1; return f>=2; }
+const FAME_MULTS=[0.75,1,1.5,2,2.5,3];
+function calcTicketSales(p){
+  const artistTickets = p.stages.flat().reduce((s,a)=>s+(a.tickets||0),0);
+  const campTickets = ca(p,'camping') * 5;
+  const base = artistTickets + campTickets;
+  const mult = FAME_MULTS[Math.min(playerFame(p), FAME_MULTS.length-1)];
+  const afterFame = base * mult;
+  const afterBids = afterFame - (p.ticketsForfeited||0);
+  return Math.max(0, Math.round(afterBids));
+}
+
+// Can the current player still place their 1 normal tile this turn?
+function hasAnyPlaceableCell(p){
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++){
+    const cell=p.grid[r][c];
+    if(!cell.placed && !cell.shadow && hasAdjacentPlaced(p.grid,r,c)) return true;
+  }
+  return false;
+}
+
+// ════════════════════════════════════════
+//  DICE
+// ════════════════════════════════════════
+function rollDice(){
+  const types=AMENITIES.map(a=>a.id);
+  G.dice = Array.from({length:5},(_,i)=>({
+    id:i, type:types[0|Math.random()*types.length], used:false
+  }));
+  G.selDie=null;
+  log('🎲 <b style="color:var(--accent2)">Amenity dice rolled!</b>');
+  playShuffle();
+}
+
+// ════════════════════════════════════════
+//  SETUP SCREEN
+// ════════════════════════════════════════
+let nPlayers=3;
+
+function setN(n,el){
+  nPlayers=n;
+  document.querySelectorAll('.cnt-btn').forEach(b=>b.classList.remove('on'));
+  if(el) el.classList.add('on');
+  buildInputs();
+}
+
+function buildInputs(){
+  const el=document.getElementById('pinputs');
+  el.innerHTML='';
+  for(let i=0;i<nPlayers;i++)
+    el.innerHTML+=`<div class="prow"><div class="pdot" style="background:${COLORS[i]}"></div>
+      <input class="pinput" type="text" placeholder="${DNAMES[i]}" id="pin${i}" maxlength="24"></div>`;
+}
+buildInputs();
+
+function startGame(){
+  const players=[];
+  for(let i=0;i<nPlayers;i++){
+    const v=document.getElementById('pin'+i);
+    players.push({
+      i, name: v&&v.value.trim()||DNAMES[i], color:COLORS[i],
+      vp:0, grid:initGrid(), tiles:0, amenities:[], stages:[[],[],[]], hand:[],
+      tickets:5,
+      ticketsForfeited:0,  // tickets spent in bids this year
+      ticketSales:0,       // final calculated ticket sales for the year
+      fame:0,
+      stageCount:1,
+      powers:[],
+      councilObj:null, councilDone:false,
+      councilBonus:null,   // stores reward label when council obj is completed; shown in hand
+      councilHistory:[],    // past completed council objectives
+      _noArtistRound:false, // for Trial by Fyre tracking
+      _bookedThisRound:false
+    });
+  }
+  const deck=shuffle(DECK.map((a,i)=>({...a,id:'a'+i})));
+  const pool=[];
+  // Council objectives: shuffle the pool, deal 1 per player
+  const councilPool = shuffle([...COUNCIL_OBJS]);
+  let councilDealIdx = 0;
+  players.forEach(p=>{ p.councilObj = councilPool[councilDealIdx++ % councilPool.length]; p.councilDone=false; });
+  // 2 random legacy objectives for this game (visible to all)
+  const legacyObjs = shuffle([...LEGACY_OBJS]).slice(0,2).map(o=>({...o, claimed:[]}));
+
+  G={
+    players, deck, pool, legacyObjs,
+    discard: [],   // artists removed from pool when a booking happens
+    councilPool: shuffle([...COUNCIL_OBJS]),
+    councilDealIdx: players.length,
+    cur:0, view:0, year:1, roundGlobal:0,
+    step: 'presetup',
+    presetupLeft: 2,
+    presetupPlayersDone: 0,
+    tilePlaced: false,
+    campBonus: 0,
+    campBonusCell: null,
+    dice:[], selDie:null,
+    approaches: [],
+    bid: null,
+      yearSummary: null,   // {playerSummaries:[], shown:false} — year-end summary
+    stageSelect: null,   // {mode:'remove'|'place', hexesToRemove:[], stageIdx} — inter-round stage placement
+    activeTab:'festival',
+    selectedStage: null,
+    logs:[]
+  };
+
+  while(G.pool.length<5&&G.deck.length) G.pool.push(G.deck.shift());
+  rollDice();
+  log('🎪 <b style="color:var(--accent2)">The festival season begins!</b>');
+  log('🌿 <b style="color:var(--accent2)">Pre-game: each player places 2 free starting tiles</b>');
+
+  document.getElementById('setup').classList.remove('active');
+  document.getElementById('game').classList.add('active');
+  render();
+}
+
+// ════════════════════════════════════════
+//  ACTIONS
+// ════════════════════════════════════════
+
+function placeTile(r,c){
+  const p = G.players[G.cur];
+  const cell = p.grid[r][c];
+  if(cell.placed || cell.shadow) return;  // never place on occupied/shadow
+
+  // ── PRE-GAME SETUP ──────────────────────────────────────────
+  if(G.step==='presetup'){
+    if(G.presetupLeft<=0) return;
+    if(!hasAdjacentPlaced(p.grid,r,c)) return;
+    cell.placed=true; p.tiles++;
+    G.presetupLeft--;
+    log(`<b>${p.name}</b> placed setup tile (${G.presetupLeft} left)`);
+    if(G.presetupLeft===0){
+      G.presetupPlayersDone++;
+      if(G.presetupPlayersDone < G.players.length){
+        // Next player does their setup tiles
+        G.cur = G.presetupPlayersDone;
+        G.view = G.cur;
+        G.presetupLeft = 2;
+        log(`— <b>${G.players[G.cur].name}</b>'s starting tiles —`);
+      } else {
+        // All players done — start real game, player 0 goes first
+        G.cur=0; G.view=0;
+        G.step='tile'; G.tilePlaced=false;
+        log('🎸 <b style="color:var(--accent2)">Setup complete! Turn 1 begins.</b>');
+      }
+    }
+    render(); return;
+  }
+
+  // ── CAMPING BONUS ────────────────────────────────────────────
+  if(G.step==='campbonus'){
+    if(G.campBonus<=0){ advanceAfterCampbonus(); render(); return; }
+    // Must be adjacent to the campsite hex
+    if(!adjCells(G.campBonusCell.r, G.campBonusCell.c).some(([rr,cc])=>rr===r&&cc===c)) return;
+    cell.placed=true; p.tiles++;
+    G.campBonus--;
+    log(`<b>${p.name}</b> placed ⛺ bonus tile (${G.campBonus} remaining)`);
+    if(G.campBonus===0){
+      G.campBonusCell=null;
+      advanceAfterCampbonus();
+    }
+    render(); return;
+  }
+
+  // ── NORMAL TURN ──────────────────────────────────────────────
+  if(G.step!=='tile') return;
+  if(G.tilePlaced){ modal('Tile Already Placed','You can only place 1 tile per turn.'); return; }
+  if(!hasAdjacentPlaced(p.grid,r,c)) return;
+  cell.placed=true; p.tiles++;
+  G.tilePlaced=true;
+  G.step='amenity';
+  log(`<b>${p.name}</b> placed a hex tile`);
+  render();
+}
+
+function advanceAfterCampbonus(){
+  G.step='artist';
+}
+
+function selectDie(idx){
+  if(G.step!=='amenity') return;
+  if(G.dice[idx].used) return;
+  G.selDie = G.selDie===idx ? null : idx;
+  render();
+}
+
+function placeAmenity(r,c){
+  if(G.step!=='amenity' || G.selDie===null) return;
+  const p=G.players[G.cur];
+  const cell=p.grid[r][c];
+  if(!cell.placed || cell.amenity || cell.stg || cell.shadow) return;
+  const die=G.dice[G.selDie];
+  if(die.used) return;
+
+  cell.amenity=die.type;
+  p.amenities.push(die.type);
+  die.used=true;
+  const am=AMENITIES.find(a=>a.id===die.type);
+  log(`<b>${p.name}</b> placed ${am.icon} <span style="color:var(--accent)">${am.name}</span>`);
+  G.selDie=null;
+
+  if(die.type==='camping'){
+    // Camping bonus: player places 2 tiles adjacent to the campsite
+    G.campBonus=2;
+    G.campBonusCell={r:cell.r, c:cell.c};
+    G.step='campbonus';
+    log(`⛺ <b style="color:var(--accent2)">Camping bonus! Place 2 tiles adjacent to the campsite.</b>`);
+  } else {
+    G.step='artist';
+  }
+  render();
+}
+
+function reroll(){
+  const left=G.dice.filter(d=>!d.used).length;
+  if(left>=3) return;
+  rollDice();
+  render();
+}
+
+function awardStageFame(p, si){
+  // Award fame when the first artist is booked onto a stage (stage si becomes active)
+  const firstArtist = p.stages[si].length === 1;
+  if(firstArtist && si===1){ p.fame=(p.fame||0)+1; log(`⭐ <b>${p.name}</b> +1 Fame for Stage 2 (now Fame ${p.fame})`); }
+  if(firstArtist && si===2){ p.fame=(p.fame||0)+1; log(`⭐ <b>${p.name}</b> +1 Fame for Stage 3 (now Fame ${p.fame})`); }
+}
+
+// Refill pool to 5 artists; if deck is empty, shuffle discard back
+function refillPool(){
+  const poolBefore = G.pool.length;
+  if(G.deck.length===0 && G.discard.length>0){
+    G.deck=shuffle([...G.discard]);
+    G.discard=[];
+    log('🔀 <b style="color:var(--accent2)">Artist deck reshuffled from discards!</b>');
+  }
+  while(G.pool.length<5 && G.deck.length) G.pool.push(G.deck.shift());
+  // Notify when new artists enter the pool
+  if(G.pool.length > poolBefore && poolBefore < 5 && G.roundGlobal > 0){
+    showToast('New acts have entered the pool!', 'refresh', '🎵', 3000);
+    playShuffle();
+  }
+}
+
+// Discard all non-approached artists from the pool (called after a direct booking)
+function discardNonApproached(){
+  const approachedIds = new Set(G.approaches.map(a=>a.artistId));
+  const keep=[], discard=[];
+  G.pool.forEach(a=>{ if(approachedIds.has(a.id)) keep.push(a); else discard.push(a); });
+  G.discard.push(...discard);
+  G.pool=keep;
+  refillPool();
+}
+
+function bookFromPool(id){
+  // Direct book from pool (must meet reqs & have valid stage)
+  if(G.step!=='artist') return;
+  const cp=G.players[G.cur];
+  const idx=G.pool.findIndex(a=>a.id===id);
+  if(idx===-1) return;
+  const art=G.pool[idx];
+  const metReqs=Object.entries(art.reqs).every(([t,n])=>ca(cp,t)>=n);
+  const si=cp.stages.findIndex((arr,i)=>arr.length<3&&art.stg<=i+1&&!stageLocked(cp,i)&&fameAllowsStage(cp,art.stg));
+  if(!metReqs){ modal('Requirements Not Met','You need more amenities to book this artist directly. Try approaching them instead.'); return; }
+  if(si===-1){ modal('No Valid Stage',`You need a stage that can hold this artist (Stage ${art.stg}+) with a free slot and sufficient Fame. Try approaching them instead.`); return; }
+  cp.stages[si].push(art); cp.vp+=art.vp;
+  G.pool.splice(idx,1);
+  log(`<b>${cp.name}</b> 🎤 booked <span style="color:var(--accent)">${art.name}</span> (+${art.vp}VP) → Stage ${si+1}`);
+  showToast(`${cp.name} booked ${art.name}! +${art.vp}VP`, 'vp', '🎤', 3000);
+  playDing();
+  awardStageFame(cp, si);
+  cp._bookedThisRound=true;
+  discardNonApproached();
+  G.step='done';
+  render();
+}
+
+function pickArtist(id){
+  // Legacy: clicking the card itself — tries to book directly, falls back to approach
+  if(G.step!=='artist') return;
+  const cp=G.players[G.cur];
+  const idx=G.pool.findIndex(a=>a.id===id);
+  if(idx===-1) return;
+  const art=G.pool[idx];
+  const metReqs=Object.entries(art.reqs).every(([t,n])=>ca(cp,t)>=n);
+  const si=cp.stages.findIndex((arr,i)=>arr.length<3&&art.stg<=i+1&&!stageLocked(cp,i)&&fameAllowsStage(cp,art.stg));
+
+  if(metReqs && si!==-1){
+    bookFromPool(id);
+  } else {
+    approachArtist(id);
+  }
+}
+
+function playHand(id,si){
+  if(G.step!=='artist') return;
+  const cp=G.players[G.cur];
+  const idx=cp.hand.findIndex(a=>a.id===id);
+  if(idx===-1) return;
+  const art=cp.hand[idx];
+  if(!Object.entries(art.reqs).every(([t,n])=>ca(cp,t)>=n)){ modal('Requirements Not Met','You need more amenities to book this artist.'); return; }
+  if(cp.stages[si].length>=3){ modal('Stage Full','That stage already has 3 artists.'); return; }
+  if(art.stg>si+1){ modal('Wrong Stage',`This artist requires Stage ${art.stg} or higher.`); return; }
+  if(stageLocked(cp,si)){ modal('Stage Locked','You need to purchase this stage during the inter-round phase (costs 3 hexes).'); return; }
+  if(!fameAllowsStage(cp,art.stg)){ modal('Fame Too Low',`You need Fame ${art.stg-1}+ to book a Stage ${art.stg} artist. Your Fame is ${playerFame(cp)}.`); return; }
+  cp.stages[si].push(art); cp.vp+=art.vp; cp.hand.splice(idx,1);
+  log(`<b>${cp.name}</b> booked <span style="color:var(--accent)">${art.name}</span> (+${art.vp}VP) → Stage ${si+1}`);
+  awardStageFame(cp, si);
+  cp._bookedThisRound=true;
+  discardNonApproached();
+  G.step='done'; render();
+}
+
+function skipArtist(){
+  if(G.step!=='artist') return;
+  G.step='done'; render();
+}
+
+function tryEndTurn(){
+  if(G.step==='presetup'){
+    modal('Setup Phase','All players must place their 2 starting tiles first.');
+    return;
+  }
+  if(G.step==='campbonus'){
+    // Allow forfeiting remaining bonus tiles
+    modal('Forfeit Camping Bonus?',
+      `You still have ${G.campBonus} bonus tile${G.campBonus!==1?'s':''} to place. Skip them?`, true);
+    return;
+  }
+  if(G.step==='bid'){
+    modal('Bid In Progress','All players must complete their sealed bids before continuing.');
+    return;
+  }
+  if(G.step==='yearsummary'){
+    modal('Year Summary','Review the year summary first, then continue.');
+    return;
+  }
+  if(G.step==='amenity'){
+    modal('Place Amenity First','You placed a tile — choose a die and place it on your new hex.');
+    return;
+  }
+  doEndTurn();
+}
+
+function doEndTurn(){
+  const cp = G.players[G.cur];
+  checkCouncilObj(cp);
+  checkLegacyObjs();
+  refillPool();
+  G.roundGlobal++;
+  const nextPlayer=(G.cur+1)%G.players.length;
+
+  // After every full round of all players
+  if(nextPlayer===0){
+    G.players.forEach(p=>{ p._noArtistRound = !p._bookedThisRound; });
+    checkLegacyObjs();
+    G.players.forEach(p=>{ p._bookedThisRound=false; });
+
+    const yr=Math.floor(G.roundGlobal/G.players.length);
+    if(yr>0 && yr%3===0){
+      // Year ends — calculate ticket sales and show summary
+      const summaries = G.players.map(p=>{
+        const artistTickets = p.stages.flat().reduce((s,a)=>s+(a.tickets||0),0);
+        const campTickets = ca(p,'camping')*5;
+        const base = artistTickets + campTickets;
+        const fameLvl = Math.min(playerFame(p), FAME_MULTS.length-1);
+        const mult = FAME_MULTS[fameLvl];
+        const afterFame = base * mult;
+        const forfeited = p.ticketsForfeited||0;
+        const total = Math.round(Math.max(0, afterFame - forfeited));
+        const vpLost = (forfeited > afterFame) ? 3 : 0;
+        return { player:p, artistTickets, campTickets, base, fameLvl, mult, afterFame, forfeited, total, vpLost };
+      });
+
+      // Top ticket seller gets 1VP per 10 tickets
+      const maxTickets = Math.max(...summaries.map(s=>s.total));
+      summaries.forEach(s=>{
+        s.player.ticketSales = s.total;
+        if(s.vpLost){ s.player.vp=Math.max(0,s.player.vp-s.vpLost); }
+        if(s.total===maxTickets && maxTickets>0){
+          const bonus=Math.floor(maxTickets/10);
+          s.topSeller=true; s.bonusVP=bonus;
+          s.player.vp+=bonus;
+          showToast(`${s.player.name} — top ticket seller! +${bonus}VP`, 'vp', '🏆', 4000);
+          playRegister();
+          log(`🏆 <b>${s.player.name}</b> top ticket seller! +${bonus}VP`);
+        } else { s.topSeller=false; s.bonusVP=0; }
+      });
+
+      G.year++;
+      if(G.year>3){
+        // Show year summary then go to final end
+        G.yearSummary={ summaries, isLast:true };
+        G.step='yearsummary';
+        render(); return;
+      }
+
+      log(`🌅 <b style="color:var(--accent2)">Year ${G.year} begins after the summary!</b>`);
+      G.yearSummary={ summaries, isLast:false };
+      G.step='yearsummary';
+      render(); return;
+    }
+
+    dealNewCouncilObjs();
+  }
+
+  startPlayerTurn(nextPlayer);
+}
+
+function advanceFromYearSummary(){
+  const isLast = G.yearSummary?.isLast;
+  G.yearSummary=null;
+  G.step=null;
+  if(isLast){ endGame(); return; }
+  // Reset for new year: clear stages, discard pool (non-approached), refill
+  G.players.forEach(p=>{
+    p.stages=[[],[],[]];
+    p.ticketsForfeited=0;
+    p.ticketSales=0;
+  });
+  G.discard.push(...G.pool.filter(a=>!G.approaches.some(ap=>ap.artistId===a.id)));
+  G.pool = G.pool.filter(a=>G.approaches.some(ap=>ap.artistId===a.id));
+  // Reshuffle deck with discards
+  if(G.deck.length===0 && G.discard.length>0){
+    G.deck=shuffle([...G.discard]); G.discard=[];
+  } else {
+    G.deck = shuffle([...G.deck, ...G.discard]);
+    G.discard=[];
+  }
+  refillPool();
+  dealNewCouncilObjs();
+  startPlayerTurn(0);
+}
+
+function dealNewCouncilObjs(){
+  // Reshuffle if we've exhausted the pool
+  if(G.councilDealIdx >= G.councilPool.length){
+    G.councilPool = shuffle([...COUNCIL_OBJS]);
+    G.councilDealIdx = 0;
+  }
+  G.players.forEach(p=>{
+    // Only give a new objective if player has no current obj at all (first time or never had one)
+    // Players who completed their obj keep it as a bonus — they do NOT get a replacement
+    // Players who still have an uncompleted obj also keep it
+    if(!p.councilObj){
+      const next = G.councilPool[G.councilDealIdx++ % G.councilPool.length];
+      p.councilObj = next;
+      p.councilDone = false;
+      log(`🏅 <b>${p.name}</b> received council objective: <b>${next.name}</b>`);
+    }
+    // Note: completed objectives (councilDone=true) stay as-is, showing as bonus in hand
+  });
+}
+
+// Central function to begin any player's turn — always resolves pending bids first
+function startPlayerTurn(pIdx){
+  const turnNum = Math.floor(G.roundGlobal / G.players.length) + 1;
+  function _doStart(){
+    G.cur=pIdx;
+    G.view=pIdx;
+    G.step='tile';
+    G.tilePlaced=false;
+    G.campBonus=0;
+    G.campBonusCell=null;
+    G.players[pIdx]._bookedThisRound=false;
+    // Dice are universal — only re-roll once per full round (when player 0 starts)
+    if(pIdx===0){ rollDice(); }
+    log(`— <b>${G.players[pIdx].name}</b>'s turn —`);
+    checkBidsForPlayer(pIdx);  // may change G.step to 'bid'
+    render();
+  }
+  // Show handoff screen for all turns except the very first
+  if(G.roundGlobal > 0){
+    showHandoff(pIdx, turnNum, _doStart);
+  } else {
+    _doStart();
+  }
+}
+
+function checkCouncilObj(p){
+  if(!p.councilObj || p.councilDone) return;
+  if(!p.councilObj.fn(p)) return;
+  p.councilDone=true;
+  // Apply the reward
+  if(p.councilObj.rewardFn) p.councilObj.rewardFn(p);
+  else { applyReward(p, p.councilObj.reward); log(`🏅 <b>${p.name}</b> completed "<b>${p.councilObj.name}</b>"`); showToast(`${p.name} completed: ${p.councilObj.name}!`, 'obj', '🏅', 3500); playDing(); }
+  // Store a bonus card in their hand display (doesn't count toward hand limit)
+  // Build a readable label — use rewardLabel() on the reward string
+  const rLabel = rewardLabel(p.councilObj.reward);
+  p.councilBonus = { objName: p.councilObj.name, rewardLabel: rLabel };
+}
+
+function checkLegacyObjs(){
+  G.legacyObjs.forEach(o=>{
+    G.players.forEach(p=>{
+      if(!o.fn(p)) return;
+      if(o.rewardFn) o.rewardFn(p, o);
+    });
+  });
+}
+
+function applyReward(p, reward){
+  reward.split(',').forEach(r=>{
+    const [k,v]=r.split(':');
+    const n=parseInt(v)||0;
+    if(k==='vp')      p.vp+=n;
+    if(k==='fame')    { p.fame=(p.fame||0)+n; log(`⭐ <b>${p.name}</b> Fame is now ${p.fame}`); }
+    if(k==='tickets') p.tickets+=n;
+    if(k==='power')   { if(!p.powers.includes(v)) p.powers.push(v); }
+  });
+}
+
+function rewardLabel(reward){
+  const parts=reward.split(',');
+  const main=parts.find(r=>!r.startsWith('_per'));
+  const per=parts.find(r=>r.startsWith('_per'));
+  if(!main) return reward;
+  const [k,v]=main.split(':');
+  let label='';
+  if(k==='vp')      label=`+${v} VP`;
+  else if(k==='fame')    label=`+${v} ⭐ Fame`;
+  else if(k==='tickets') label=`+${v} 🎟️ Tickets`;
+  else if(k==='power')   label=`Power: ${v.replace(/_/g,' ')}`;
+  else label=main;
+  if(per){ const type=per.split(':')[1]; label+=` per ${type}`; }
+  return label;
+}
+
+// Inter-round: pass control through each player to let them buy stages
+function interRoundDone(){
+  if(G.stageSelect){ modal('Stage Select Active','Please finish selecting your stage or cancel first.'); return; }
+  const ir=G.interRound;
+  if(!ir) return;
+  ir.playersDone.push(G.cur);
+  const next=G.players.find((_,i)=>!ir.playersDone.includes(i));
+  if(next){
+    G.cur=next.i; G.view=next.i;
+    render(); return;
+  }
+  G.interRound=null;
+  startPlayerTurn(0);
+}
+
+function buyStage(){
+  const p=G.players[G.cur];
+  if(G.step!=='interround') return;
+  if((p.stageCount||1)>=3){ modal('Max Stages','You already have 3 stages.'); return; }
+  if(p.tiles<3){ modal('Not Enough Hexes',`You need at least 3 hex tiles to trade in. You have ${p.tiles}.`); return; }
+  // Enter hex-removal mode: player must click 3 of their hexes to remove
+  G.stageSelect={ mode:'remove', hexesToRemove:[], stageIdx:(p.stageCount||1) };
+  render();
+}
+
+function clickHexForStageSelect(r,c){
+  if(!G.stageSelect) return;
+  const p=G.players[G.cur];
+  const cell=p.grid[r][c];
+  if(G.stageSelect.mode==='remove'){
+    // Toggle selection of non-stage, non-shadow placed hexes
+    if(!cell.placed || cell.stg || cell.shadow) return;
+    const key=`${r},${c}`;
+    const idx=G.stageSelect.hexesToRemove.indexOf(key);
+    if(idx>=0){ G.stageSelect.hexesToRemove.splice(idx,1); }
+    else if(G.stageSelect.hexesToRemove.length<3){ G.stageSelect.hexesToRemove.push(key); }
+    render();
+  } else if(G.stageSelect.mode==='place'){
+    // Player picks where to place the new stage (must be adjacent to their festival)
+    if(cell.placed || cell.shadow) return;
+    if(!hasAdjacentPlaced(p.grid,r,c)) return;
+    // Place a 3-hex stage: the clicked hex is the centre-right; try to find an arch
+    // We'll auto-place a 3-hex mini-stage using the same arch logic relative to the chosen position
+    const newStage = findStagePosition(p.grid, r, c);
+    if(!newStage){ modal('Cannot Place Stage Here','Not enough room. Try another spot.'); return; }
+    // Mark hexes as stage tiles and add to player's extra stages array
+    newStage.forEach(({r,c})=>{ p.grid[r][c].placed=true; p.grid[r][c].stg=true; p.grid[r][c].extraStage=G.stageSelect.stageIdx; });
+    p.stageCount=(p.stageCount||1)+1;
+    p.tiles-=3;
+    if(p.stageCount===2){ p.fame=(p.fame||0)+1; log(`⭐ <b>${p.name}</b> +1 Fame for Stage 2`); }
+    if(p.stageCount===3){ p.fame=(p.fame||0)+1; log(`⭐ <b>${p.name}</b> +1 Fame for Stage 3`); }
+    log(`🎪 <b>${p.name}</b> placed Stage ${p.stageCount}!`);
+    G.stageSelect=null;
+    render();
+  }
+}
+
+function confirmHexRemoval(){
+  if(!G.stageSelect || G.stageSelect.mode!=='remove') return;
+  if(G.stageSelect.hexesToRemove.length<3){ modal('Select 3 Hexes','Select exactly 3 hex tiles to trade in.'); return; }
+  const p=G.players[G.cur];
+  G.stageSelect.hexesToRemove.forEach(key=>{
+    const [r,c]=key.split(',').map(Number);
+    p.grid[r][c].placed=false;
+    p.grid[r][c].amenity=null;
+    p.amenities=p.amenities.filter((_,i)=>{
+      // Remove amenities from removed hexes
+      const removed=G.stageSelect.hexesToRemove.map(k=>k.split(',').map(Number));
+      return !removed.some(([rr,cc])=>p.grid[rr][cc].amenity===p.amenities[i]&&rr===r&&cc===c);
+    });
+    p.tiles--;
+  });
+  // Re-sync amenities array (remove amenities from those cells)
+  G.stageSelect.hexesToRemove.forEach(key=>{
+    const [r,c]=key.split(',').map(Number);
+    if(p.grid[r][c].amenityType){ p.amenities.splice(p.amenities.indexOf(p.grid[r][c].amenityType),1); }
+    p.grid[r][c].amenity=null;
+  });
+  G.stageSelect.mode='place';
+  log(`🔨 <b>${p.name}</b> removed 3 hexes — now place your new stage`);
+  render();
+}
+
+function cancelStageSelect(){
+  G.stageSelect=null;
+  render();
+}
+
+// Find a valid 3-hex arch position near the clicked cell
+function findStagePosition(grid, r, c){
+  // Try various arch orientations around (r,c)
+  const candidates=[
+    [{r:r,c:c},{r:r-1,c:c+1},{r:r,c:c+2}],  // flat, going right
+    [{r:r,c:c},{r:r-1,c:c-1},{r:r,c:c-2}],  // flat, going left
+    [{r:r+1,c:c},{r:r,c:c+1},{r:r+1,c:c+2}],
+    [{r:r+1,c:c},{r:r,c:c-1},{r:r+1,c:c-2}],
+    [{r:r,c:c},{r:r,c:c+1},{r:r,c:c+2}],
+    [{r:r,c:c-1},{r:r,c:c},{r:r,c:c+1}],
+  ];
+  for(const cand of candidates){
+    if(cand.every(({r,c})=>r>=0&&r<ROWS&&c>=0&&c<COLS&&!grid[r][c].placed&&!grid[r][c].shadow&&!grid[r][c].stg)){
+      // Check at least one hex is adjacent to existing festival
+      if(cand.some(({r,c})=>hasAdjacentPlaced(grid,r,c))) return cand;
+    }
+  }
+  return null;
+}
+
+// ── APPROACH & BIDDING ───────────────────────────────────────
+
+function approachArtist(id){
+  if(G.step!=='artist') return;
+  const cp=G.players[G.cur];
+  const poolIdx=G.pool.findIndex(a=>a.id===id);
+  if(poolIdx===-1) return;
+  const art=G.pool[poolIdx];
+
+  // Check if this player already approached this artist
+  const existing=G.approaches.find(a=>a.artistId===id);
+  if(existing && existing.bidders.includes(G.cur)){
+    modal('Already Approached',`You already have an agent on ${art.name}.`);
+    return;
+  }
+
+  // Players can approach ANY artist regardless of fame — fame only affects direct booking
+  if(!existing){
+    G.approaches.push({artistId:id, bidders:[G.cur]});
+  } else {
+    existing.bidders.push(G.cur);
+  }
+  log(`<b>${cp.name}</b> 🕴️ approached <span style="color:var(--accent)">${art.name}</span> — resolves on their next turn`);
+  G.step='done';
+  render();
+}
+
+function checkBidsForPlayer(pIdx){
+  // Find all artists that this player approached (they are the "host" of the bid)
+  // A bid is resolved when it comes back to the player who originally approached
+  const myApproaches = G.approaches.filter(a=>a.bidders[0]===pIdx);
+  if(myApproaches.length===0) return;
+
+  // Start resolving the first one
+  const approach = myApproaches[0];
+  const art = G.pool.find(a=>a.id===approach.artistId);
+  if(!art){
+    // Artist was taken by someone else somehow, clean up
+    G.approaches = G.approaches.filter(a=>a.artistId!==approach.artistId);
+    return;
+  }
+
+  if(approach.bidders.length===1){
+    // Only original player — no competition, they just get them (go to hand)
+    const cp=G.players[pIdx];
+    if(cp.hand.length<maxHand(cp)){
+      cp.hand.push(art);
+      G.pool.splice(G.pool.findIndex(a=>a.id===art.id),1);
+      refillPool();
+      log(`<b>${cp.name}</b> 🎤 secured <span style="color:var(--accent)">${art.name}</span> (no competition) → hand`);
+    } else {
+      log(`<b>${cp.name}</b> wanted <span style="color:var(--accent)">${art.name}</span> but their hand is full — artist returned to pool`);
+    }
+    G.approaches = G.approaches.filter(a=>a.artistId!==approach.artistId);
+    return;
+  }
+
+  // Multiple bidders — start the bid
+  G.step='bid';
+  G.bid={
+    artistId: approach.artistId,
+    bidders: [...approach.bidders],
+    bidsIn: {},
+    currentBidder: 0,  // index into bidders array
+    phase: 'collect'
+  };
+  G.approaches = G.approaches.filter(a=>a.artistId!==approach.artistId);
+  log(`🎯 <b style="color:var(--accent2)">Bid begins for ${art.name}!</b> ${approach.bidders.map(i=>G.players[i].name).join(' vs ')}`);
+}
+
+function submitBid(amount){
+  if(G.step!=='bid'||!G.bid) return;
+  const bidderIdx=G.bid.bidders[G.bid.currentBidder];
+  const player=G.players[bidderIdx];
+  amount=Math.max(0,Math.min(amount,player.tickets));
+  G.bid.bidsIn[bidderIdx]=amount;
+  log(`<b>${player.name}</b> has placed their bid (sealed)`);
+  G.bid.currentBidder++;
+  if(G.bid.currentBidder>=G.bid.bidders.length){
+    resolveBid();
+  } else {
+    // Update G.cur so the screen shows the correct next bidder
+    G.cur = G.bid.bidders[G.bid.currentBidder];
+    G.view = G.cur;
+    render();
+  }
+}
+
+function resolveBid(){
+  if(!G.bid) return;
+  const art=G.pool.find(a=>a.id===G.bid.artistId);
+  if(!art){ G.bid=null; G.step='tile'; return; }
+
+  // Reveal all bids
+  let resultLines=[];
+  G.bid.bidders.forEach(pIdx=>{
+    const amt=G.bid.bidsIn[pIdx]||0;
+    resultLines.push(`${G.players[pIdx].name}: 🎟️ ${amt}`);
+  });
+
+  // Find winner (highest bid wins; ties go to original approacher — bidders[0])
+  let winnerIdx=G.bid.bidders[0];
+  let winAmt=G.bid.bidsIn[winnerIdx]||0;
+  G.bid.bidders.forEach(pIdx=>{
+    const amt=G.bid.bidsIn[pIdx]||0;
+    if(amt>winAmt){ winAmt=amt; winnerIdx=pIdx; }
+  });
+
+  const winner=G.players[winnerIdx];
+  // Deduct tickets from winner only
+  winner.tickets=Math.max(0,winner.tickets-winAmt);
+  winner.ticketsForfeited=(winner.ticketsForfeited||0)+winAmt;
+
+  // Give artist to winner
+  const poolIdx=G.pool.findIndex(a=>a.id===G.bid.artistId);
+  if(poolIdx!==-1 && winner.hand.length<maxHand(winner)){
+    winner.hand.push(art);
+    G.pool.splice(poolIdx,1);
+    refillPool();
+  }
+
+  log(`🎯 Bid results: ${resultLines.join(' | ')}`);
+  log(`🏆 <b>${winner.name}</b> wins <span style="color:var(--accent)">${art.name}</span> for 🎟️${winAmt} tickets`);
+  showToast(`${winner.name} wins ${art.name}!`, 'bid', '🎤', 3500);
+  playDing();
+
+  const originalTurnPlayer = G.bid.bidders[0];
+  G.bid=null;
+  startPlayerTurn(originalTurnPlayer);
+}
+
+function renderBid(){
+  const el=document.getElementById('boardarea');
+  if(!G.bid) return;
+  const art=G.pool.find(a=>a.id===G.bid.artistId);
+  const bidderIdx=G.bid.bidders[G.bid.currentBidder];
+  const player=G.players[bidderIdx];
+  if(!art||!player) return;
+
+  const tags=Object.entries(art.reqs).map(([t,n])=>{
+    const ico=AMENITIES.find(x=>x.id===t)?.icon;
+    return`<span class="rtag">${ico}×${n}</span>`;
+  }).join('');
+
+  el.innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:center;height:100%;padding:24px">
+      <div style="background:#111;border:1px solid #2d2d2d;border-radius:8px;padding:28px 32px;max-width:380px;width:100%;text-align:center">
+        <div style="font-size:11px;letter-spacing:2px;color:var(--accent2);font-family:Space Mono,monospace;margin-bottom:12px;text-transform:uppercase">🎯 Artist Bid</div>
+        <div style="font-size:20px;font-weight:700;color:#fff;margin-bottom:4px">${art.name}</div>
+        <div style="font-size:10px;color:#888;font-family:Space Mono,monospace;margin-bottom:8px">${art.genre} · Stage ${art.stg}+ · ${art.vp}VP</div>
+        <div style="display:flex;gap:4px;justify-content:center;margin-bottom:20px">${tags}</div>
+        <div style="background:#1a1a1a;border-radius:6px;padding:12px;margin-bottom:20px">
+          <div style="font-size:10px;color:#666;font-family:Space Mono,monospace;margin-bottom:6px">Bidding order</div>
+          ${G.bid.bidders.map((pIdx,i)=>{
+            const p=G.players[pIdx];
+            const done=i<G.bid.currentBidder;
+            const active=i===G.bid.currentBidder;
+            return`<div style="display:flex;align-items:center;gap:8px;padding:4px 0;opacity:${active?1:done?0.4:0.6}">
+              <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${p.color}"></span>
+              <span style="color:${active?'#fff':'#888'};font-family:Space Mono,monospace;font-size:10px;flex:1;text-align:left">${p.name}</span>
+              <span style="font-size:9px;color:${active?'var(--accent2)':done?'#444':'#555'}">${done?'✓ bid sealed':active?'bidding now…':'waiting'}</span>
+            </div>`;
+          }).join('')}
+        </div>
+        <div style="background:#0d1a08;border:1px solid #2a3d20;border-radius:6px;padding:16px;margin-bottom:16px">
+          <div style="display:flex;align-items:center;gap:6px;justify-content:center;margin-bottom:4px">
+            <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${player.color}"></span>
+            <span style="color:#fff;font-family:Space Mono,monospace;font-size:11px;font-weight:700">${player.name}</span>
+          </div>
+          <div style="font-size:10px;color:#aaa;font-family:Space Mono,monospace;margin-bottom:12px">You have 🎟️ <b style="color:#fff">${player.tickets}</b> tickets to spend</div>
+          <div style="font-size:9px;color:#666;font-family:Space Mono,monospace;margin-bottom:10px">Enter your sealed bid — only the winner pays</div>
+          <div style="display:flex;gap:8px;align-items:center;justify-content:center">
+            <button onclick="adjBid(-1)" style="width:32px;height:32px;background:#1c1c1c;border:1px solid #333;border-radius:4px;color:#aaa;font-size:16px;cursor:pointer;font-family:Space Mono,monospace">−</button>
+            <input id="bidamt" type="number" min="0" max="${player.tickets}" value="0"
+              style="width:70px;height:32px;background:#111;border:1px solid #444;border-radius:4px;color:#fff;font-size:18px;font-family:Space Mono,monospace;text-align:center;font-weight:700"
+              oninput="clampBid(${player.tickets})">
+            <button onclick="adjBid(1)" style="width:32px;height:32px;background:#1c1c1c;border:1px solid #333;border-radius:4px;color:#aaa;font-size:16px;cursor:pointer;font-family:Space Mono,monospace">+</button>
+          </div>
+        </div>
+        <button onclick="confirmBid()" style="width:100%;padding:10px;background:var(--accent);border:none;border-radius:5px;color:#fff;font-family:Space Mono,monospace;font-size:11px;letter-spacing:1px;font-weight:700;cursor:pointer;text-transform:uppercase">🎟️ Seal Bid</button>
+        <div style="font-size:9px;color:#444;font-family:Space Mono,monospace;margin-top:8px">Highest bid wins · Only winner forfeits tickets · Ties go to first approacher</div>
+      </div>
+    </div>`;
+}
+
+function adjBid(d){
+  const inp=document.getElementById('bidamt');
+  if(!inp) return;
+  const max=parseInt(inp.max)||0;
+  inp.value=Math.max(0,Math.min(max,(parseInt(inp.value)||0)+d));
+}
+
+function clampBid(max){
+  const inp=document.getElementById('bidamt');
+  if(!inp) return;
+  inp.value=Math.max(0,Math.min(max,parseInt(inp.value)||0));
+}
+
+function confirmBid(){
+  const inp=document.getElementById('bidamt');
+  const amt=Math.max(0,parseInt(inp?.value)||0);
+  submitBid(amt);
+}
+
+function endGame(){
+  // Final council objective check
+  G.players.forEach(p=>checkCouncilObj(p));
+  const sorted=[...G.players].sort((a,b)=>b.vp-a.vp);
+  document.getElementById('game').classList.remove('active');
+  document.getElementById('endscreen').classList.add('active');
+  document.getElementById('endwinner').textContent=`🏆 ${sorted[0].name} wins with ${sorted[0].vp} VP!`;
+  document.getElementById('scoretbl').innerHTML=
+    `<tr><th>Festival</th><th>⭐ Fame</th><th>Artist VP</th><th>Total VP</th></tr>`+
+    sorted.map((p,i)=>`<tr class="${i===0?'win':''}"><td><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${p.color};margin-right:7px"></span>${p.name}</td><td>${p.fame||0}</td><td>${p.stages.flat().reduce((s,a)=>s+a.vp,0)}</td><td>${p.vp}</td></tr>`).join('');
+}
+
+function log(msg){ G.logs.push(msg); }
+
+function modal(title,body,confirm=false){
+  document.getElementById('mtitle').textContent=title;
+  document.getElementById('mbody').textContent=body;
+  document.getElementById('mbtns').innerHTML=confirm
+    ?`<button class="mbtn" onclick="closeModal()">Cancel</button><button class="mbtn ok" onclick="closeModal();doEndTurn()">End Turn</button>`
+    :`<button class="mbtn ok" onclick="closeModal()">OK</button>`;
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(){ document.getElementById('modal').classList.remove('open'); }
+document.getElementById('modal').addEventListener('click',e=>{ if(e.target.id==='modal') closeModal(); });
+
+// ════════════════════════════════════════
+//  CONFETTI
+// ════════════════════════════════════════
+let _confettiRaf=null;
+function launchConfetti(){
+  const canvas=document.getElementById('confetti-canvas');
+  if(!canvas) return;
+  if(_confettiRaf){ cancelAnimationFrame(_confettiRaf); _confettiRaf=null; }
+  const ctx=canvas.getContext('2d');
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+  const colors=['#e85c00','#ffd600','#ff5c8a','#5cf5c0','#6090ff','#ff9a3c','#ffffff','#ff4070','#40ffb0'];
+  const emojis=['🎵','🎶','🎤','🎸','🥁','⭐','🎊','🎉','🏆'];
+  const pieces=[];
+  // Big rect/circle confetti
+  for(let i=0;i<220;i++){
+    pieces.push({
+      type:'shape',
+      x:Math.random()*canvas.width,
+      y:Math.random()*canvas.height-canvas.height*1.2,
+      r:Math.random()*7+2,
+      d:Math.random()*200+80,
+      color:colors[Math.floor(Math.random()*colors.length)],
+      tiltAngle:Math.random()*Math.PI*2,
+      tiltAngleInc:(Math.random()*.08)+.03,
+      vx:(Math.random()-.5)*3,
+      vy:Math.random()*2.5+1,
+      shape:Math.random()>0.4?'rect':'circle',
+      w:Math.random()*10+4,
+      h:Math.random()*6+3,
+    });
+  }
+  // Emoji particles
+  for(let i=0;i<28;i++){
+    pieces.push({
+      type:'emoji',
+      x:Math.random()*canvas.width,
+      y:Math.random()*canvas.height-canvas.height*1.2,
+      emoji:emojis[Math.floor(Math.random()*emojis.length)],
+      size:Math.random()*18+12,
+      vy:Math.random()*1.5+0.8,
+      vx:(Math.random()-.5)*2,
+      rot:Math.random()*Math.PI*2,
+      rotSpeed:(Math.random()-.5)*.1,
+      d:Math.random()*100+50,
+    });
+  }
+  let angle=0, frame=0;
+  const maxFrames=500;
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    angle+=0.01;
+    frame++;
+    const fade=frame>380?Math.max(0,1-(frame-380)/(maxFrames-380)):1;
+    ctx.globalAlpha=fade;
+    pieces.forEach(p=>{
+      if(p.type==='shape'){
+        p.tiltAngle+=p.tiltAngleInc;
+        p.y+=Math.cos(angle+p.d)*0.8+p.vy;
+        p.x+=Math.sin(angle)*1.5+p.vx;
+        p.tiltAngle+=p.tiltAngleInc;
+        if(p.y>canvas.height+20) p.y=-20;
+        if(p.x>canvas.width+20) p.x=-20;
+        if(p.x<-20) p.x=canvas.width+20;
+        ctx.fillStyle=p.color;
+        ctx.save();
+        ctx.translate(p.x,p.y);
+        ctx.rotate(p.tiltAngle);
+        if(p.shape==='circle'){
+          ctx.beginPath(); ctx.arc(0,0,p.r,0,Math.PI*2); ctx.fill();
+        } else {
+          ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+        }
+        ctx.restore();
+      } else {
+        p.y+=p.vy+Math.cos(angle+p.d)*.5;
+        p.x+=p.vx+Math.sin(angle)*.8;
+        p.rot+=p.rotSpeed;
+        if(p.y>canvas.height+30) p.y=-30;
+        if(p.x>canvas.width+20) p.x=-20;
+        if(p.x<-20) p.x=canvas.width+20;
+        ctx.font=`${p.size}px serif`;
+        ctx.textAlign='center';
+        ctx.save();
+        ctx.translate(p.x,p.y);
+        ctx.rotate(p.rot);
+        ctx.fillText(p.emoji,0,0);
+        ctx.restore();
+      }
+    });
+    ctx.globalAlpha=1;
+    if(frame<maxFrames){ _confettiRaf=requestAnimationFrame(draw); }
+    else { ctx.clearRect(0,0,canvas.width,canvas.height); }
+  }
+  draw();
+}
+function render(){
+  renderTop(); renderStep(); renderPlayers();
+  if(G.step==='bid'){ renderBid(); }
+  else if(G.step==='yearsummary'){ renderYearSummary(); }
+  else { renderBoard(); }
+  renderPool(); renderHand(); renderDice(); renderLog();
+  renderObjectivesSidebar();
+}
+
+function renderTop(){
+  const cp=G.players[G.cur];
+  document.getElementById('pdot').style.background=cp.color;
+  document.getElementById('pname').textContent=cp.name;
+
+  const lbl={
+    presetup:'SETUP', tile:'PLACE TILE', amenity:'PLACE AMENITY',
+    campbonus:'CAMP BONUS', artist:'BOOK ARTIST', bid:'BIDDING',
+    done:'READY'
+  };
+  document.getElementById('phasebadge').textContent=lbl[G.step]||G.step.toUpperCase();
+
+  let hb='';
+  if(G.step==='presetup')   hb=`🌿 ${G.presetupLeft} setup`;
+  else if(G.step==='campbonus') hb=`⛺ ${G.campBonus} bonus`;
+  else if(!G.tilePlaced)    hb='⬡ 1 tile';
+  else                      hb='⬡ placed';
+  document.getElementById('hexbadge').textContent=hb;
+
+  const pips=document.getElementById('ypips');
+  pips.innerHTML='';
+  for(let i=1;i<=3;i++){
+    pips.innerHTML+=`<div class="ypip ${i<G.year?'done':i===G.year?'now':''}"></div>`;
+    if(i<3) pips.innerHTML+=`<div style="width:8px;height:1px;background:#2d2d2d;align-self:center"></div>`;
+  }
+  const tpy=G.players.length*3;
+  const trn=(G.roundGlobal%tpy)+1;
+  document.getElementById('rlabel').textContent=`Year ${G.year} · Turn ${trn}/${tpy}`;
+  const salesEl=document.getElementById('tb-sales');
+  const bidEl=document.getElementById('tb-bid');
+  if(salesEl) salesEl.textContent=predictedTickets(G.players[G.cur]);
+  if(bidEl)   bidEl.textContent=G.players[G.cur].tickets;
+
+  const btn=document.getElementById('endbtn');
+  const blocked=G.step==='presetup'||G.step==='amenity'||G.step==='bid'||G.step==='yearsummary'||G.stageSelect;
+  btn.className='endbtn'+(blocked?' soft':'');
+}
+
+function renderStep(){
+  const el=document.getElementById('steprow');
+  if(G.step==='presetup'){
+    const total=G.players.length*2;
+    const done=G.presetupPlayersDone*2+(2-G.presetupLeft);
+    el.innerHTML=`<span class="stplabel" style="color:var(--accent2)">🌿 Pre-game setup — ${G.players[G.cur].name} places starting tiles (${done}/${total} total placed)</span>`;
+    return;
+  }
+  if(G.step==='campbonus'){
+    el.innerHTML=`<span class="stplabel" style="color:var(--accent2)">⛺ Camping bonus — click ${G.campBonus} hex${G.campBonus!==1?'es':''} adjacent to the campsite</span>`;
+    return;
+  }
+  if(G.step==='yearsummary'){
+    el.innerHTML=`<span class="stplabel" style="color:var(--accent2)">🎉 Year ${G.yearSummary?.isLast?3:G.year-1} complete — review your ticket sales!</span>`;
+    return;
+  }
+  if(G.step==='bid'&&G.bid){
+    const art=G.pool.find(a=>a.id===G.bid.artistId);
+    const bidderIdx=G.bid.bidders[G.bid.currentBidder];
+    const bidder=G.players[bidderIdx];
+    el.innerHTML=`<span class="stplabel" style="color:var(--accent2)">🎯 Bidding for ${art?.name||'artist'} — ${bidder?.name||''}, enter your sealed bid</span>`;
+    return;
+  }
+  const steps=['Place Tile','Place Amenity','Book Artist','End Turn'];
+  const keys= ['tile',      'amenity',      'artist',     'done'];
+  const ci=Math.max(0,keys.indexOf(G.step));
+  el.innerHTML='';
+  steps.forEach((s,i)=>{
+    el.innerHTML+=`<div class="stp ${i<ci?'done':i===ci?'now':''}">${i<ci?'✓':(i+1)}</div>`;
+    if(i<steps.length-1) el.innerHTML+=`<div class="stpline"></div>`;
+  });
+  el.innerHTML+=`<span class="stplabel">${steps[ci]}</span>`;
+}
+
+function renderPlayers(){
+  const el=document.getElementById('plist'); el.innerHTML='';
+  G.players.forEach((p,i)=>{
+    const cur=i===G.cur, view=i===G.view;
+    const ag={};p.amenities.forEach(a=>ag[a]=(ag[a]||0)+1);
+    const pips=Object.entries(ag).map(([k,v])=>{const am=AMENITIES.find(x=>x.id===k);return`<div class="apip">${am.icon}${v}</div>`;}).join('');
+    const pred=predictedTickets(p);
+    el.innerHTML+=`<div class="pcard ${cur?'active':''} ${view&&!cur?'viewing':''}" style="--pc:${p.color}" onclick="setView(${i})">
+      <div class="pcname"><div class="pdot2" style="background:${p.color};width:9px;height:9px;border-radius:50%"></div>${p.name}${cur?'<span class="pcbadge">ACTIVE</span>':''}</div>
+      <div class="pcstats">
+        <div class="pcstat">VP: <b>${p.vp}</b></div>
+        <div class="pcstat">⭐ <b>${p.fame||0}</b></div>
+        <div class="pcstat">Stages: <b>${p.stages.filter(arr=>arr.length>0).length}/${p.stageCount||1}</b></div>
+        <div class="pcstat">Tiles: <b>${p.tiles}</b></div>
+      </div>
+      <div style="margin-top:5px;background:rgba(255,214,0,.07);border:1px solid rgba(255,214,0,.2);border-radius:3px;padding:4px 6px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-family:Space Mono,monospace;font-size:8px;color:#888;letter-spacing:.5px">🎟️ TICKET SALES</span>
+        <span style="font-family:Space Mono,monospace;font-size:11px;font-weight:700;color:var(--accent2)">${pred}</span>
+      </div>
+      ${pips?`<div class="amini">${pips}</div>`:''}
+    </div>`;
+  });
+}
+function setView(i){ G.view=i; render(); }
+
+function setTab(t){
+  G.activeTab=t;
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  document.getElementById('tab-'+t).classList.add('on');
+  render();
+}
+
+function toggleExtraStage(r,c){
+  const p=G.players[G.view];
+  const cell=p.grid[r][c];
+  if(!cell.extraStage) return;
+  const si=cell.extraStage;
+  G.selectedStage={playerIdx:G.view, stageIdx:si};
+  render();
+}
+
+function toggleStage(r,c){
+  // All 3 stage hexes open the same popup (they form one physical stage on the board).
+  // Default opens to first stage tab (index 0). Toggle closes if already open.
+  if(G.selectedStage && G.selectedStage.playerIdx===G.view){
+    G.selectedStage=null;
+  } else {
+    G.selectedStage={playerIdx:G.view, stageIdx:0};
+  }
+  render();
+}
+function selectStageTab(si){ G.selectedStage={playerIdx:G.view, stageIdx:si}; render(); }
+function closeStagePopup(){ G.selectedStage=null; render(); }
+function renderBoard(){
+  const el=document.getElementById('boardarea');
+  if(G.activeTab==='festival') renderFestival(el);
+  else if(G.activeTab==='stages') renderStages(el);
+  else renderRules(el);
+}
+
+function renderFestival(el){
+  const p=G.players[G.view];
+  const isCur=G.view===G.cur;
+  const ss=G.stageSelect; // stage select mode
+  const isRemoveMode=isCur&&ss&&ss.mode==='remove';
+  const isPlaceMode=isCur&&ss&&ss.mode==='place';
+
+  // What mode is the board in for this player?
+  const isPresetup  = isCur && G.step==='presetup'  && G.presetupLeft>0;
+  const isNormalTile= isCur && G.step==='tile'       && !G.tilePlaced;
+  const isCampBonus = isCur && G.step==='campbonus'  && G.campBonus>0;
+  const isAmenity   = isCur && G.step==='amenity'    && G.selDie!==null;
+
+  const W=COLS*CS+S+4;
+  const H=ROWS*RS+HH/2+4;
+
+  let svg=`<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
+  <style>.glow{animation:hexglow 1.4s ease-in-out infinite;}
+/* ── HANDOFF OVERLAY ── */
+.handoff-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.88); z-index:8000;
+  display:flex; align-items:center; justify-content:center; opacity:0;
+  transition: opacity .3s; pointer-events:none; }
+.handoff-overlay.show { opacity:1; pointer-events:all; }
+.handoff-card { text-align:center; padding:48px 64px; }
+.handoff-turn { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px;
+  text-transform:uppercase; color:#444; margin-bottom:12px; }
+.handoff-name { font-family:'Bebas Neue',sans-serif; font-size:72px; letter-spacing:4px;
+  line-height:1; margin-bottom:4px; }
+.handoff-sub { font-family:'Space Mono',monospace; font-size:11px; color:#555;
+  letter-spacing:2px; text-transform:uppercase; margin-bottom:40px; }
+.handoff-go { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:4px;
+  background:var(--accent); border:none; color:#fff; padding:14px 52px; border-radius:4px;
+  cursor:pointer; transition:all .15s; }
+.handoff-go:hover { background:#c94d00; transform:translateY(-2px); }
+
+/* ── TOAST NOTIFICATIONS ── */
+#toast-container { position:fixed; bottom:24px; right:24px; z-index:9000;
+  display:flex; flex-direction:column-reverse; gap:8px; pointer-events:none; }
+.toast { background:#1a1a1a; border:1px solid #333; border-radius:6px; padding:10px 16px;
+  font-family:'Space Mono',monospace; font-size:10px; color:var(--cream); max-width:300px;
+  opacity:0; transform:translateX(20px); transition:all .25s; pointer-events:none;
+  display:flex; align-items:center; gap:10px; line-height:1.4; }
+.toast.show { opacity:1; transform:translateX(0); }
+.toast.vp { border-color:var(--accent); }
+.toast.bid { border-color:var(--accent2); color:var(--accent2); }
+.toast.obj { border-color:#4caf50; color:#4caf50; }
+.toast.refresh { border-color:#555; }
+.toast-icon { font-size:16px; flex-shrink:0; }
+
+</style>`;
+
+  for(let r=0;r<ROWS;r++){
+    for(let c=0;c<COLS;c++){
+      const cell=p.grid[r][c];
+      const {x,y}=hcenter(r,c);
+      const pts=hpoly(x,y,S-1.5);
+
+      const key=`${r},${c}`;
+      const isSelectedForRemoval=isRemoveMode&&ss.hexesToRemove.includes(key);
+
+      // Is this cell a valid placement target?
+      let placeable=false;
+      if(!cell.placed && !cell.shadow){
+        if(isPresetup || isNormalTile){
+          placeable=hasAdjacentPlaced(p.grid,r,c);
+        } else if(isCampBonus && G.campBonusCell){
+          const adjToCamp=adjCells(G.campBonusCell.r, G.campBonusCell.c).some(([rr,cc])=>rr===r&&cc===c);
+          placeable=adjToCamp;
+        } else if(isPlaceMode){
+          placeable=hasAdjacentPlaced(p.grid,r,c);
+        }
+      }
+      const isRemovable=isRemoveMode&&cell.placed&&!cell.stg&&!cell.shadow;
+      const amTarget=isAmenity && cell.placed && !cell.amenity && !cell.stg && !cell.shadow;
+
+      let fill, stroke, sw=1.5;
+      if(cell.stg && cell.extraStage){
+        // Extra (purchased) stage hexes
+        fill='#8b2a80'; stroke='#5e1a58'; sw=2;
+      } else if(cell.stg){
+        fill='#c03a3a'; stroke='#8b2020'; sw=2;
+      } else if(cell.shadow){
+        fill='#2a2a2a'; stroke='#444'; sw=1.5;
+      } else if(isSelectedForRemoval){
+        fill='#5a1010'; stroke='#ff4040'; sw=2.5;
+      } else if(isRemovable){
+        fill='#3a1010'; stroke='#cc3333'; sw=2;
+      } else if(cell.placed && cell.amenity){
+        fill='#3a6230'; stroke='#2a4822';
+      } else if(cell.placed){
+        fill='#4a7c3f'; stroke='#325528';
+      } else if(placeable){
+        fill=isPlaceMode?'#1a1a3a':'#1c3a16'; stroke=isPlaceMode?'#5a8aff':'#5aaa4a'; sw=2;
+      } else {
+        fill='#141c12'; stroke='#1c2618';
+      }
+      if(amTarget){ stroke='#ffd600'; sw=2; }
+
+      const cls=(placeable&&!isPlaceMode)||isRemovable?'glow':'';
+      let fn='';
+      if(isRemovable||isSelectedForRemoval) fn=`clickHexForStageSelect(${r},${c})`;
+      else if(isPlaceMode&&placeable) fn=`clickHexForStageSelect(${r},${c})`;
+      else if(placeable) fn=`placeTile(${r},${c})`;
+      else if(amTarget) fn=`placeAmenity(${r},${c})`;
+      else if(isStage(r,c)) fn=`toggleStage(${r},${c})`;
+      // Extra stages are also clickable
+      else if(cell.stg&&cell.extraStage) fn=`toggleExtraStage(${r},${c})`;
+
+      const cur=cell.shadow?'cursor:not-allowed':(fn?'cursor:pointer':'');
+      svg+=`<polygon class="${cls}" points="${pts}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}" onclick="${fn}" style="${cur}"/>`;
+
+      if(cell.shadow){
+        svg+=`<line x1="${x-9}" y1="${y-9}" x2="${x+9}" y2="${y+9}" stroke="#555" stroke-width="1.5" style="pointer-events:none"/>`;
+        svg+=`<line x1="${x+9}" y1="${y-9}" x2="${x-9}" y2="${y+9}" stroke="#555" stroke-width="1.5" style="pointer-events:none"/>`;
+      }
+
+      if(cell.placed && cell.amenity && !cell.stg){
+        const am=AMENITIES.find(a=>a.id===cell.amenity);
+        svg+=`<text x="${x}" y="${y+5}" text-anchor="middle" dominant-baseline="middle" font-size="16" style="pointer-events:none;user-select:none">${am.icon}</text>`;
+      }
+
+      if(isSelectedForRemoval){
+        svg+=`<text x="${x}" y="${y+5}" text-anchor="middle" dominant-baseline="middle" font-size="14" fill="#ff4040" style="pointer-events:none;user-select:none">✕</text>`;
+      }
+    }
+  }
+
+  // Stage select overlay instructions
+  if(isRemoveMode){
+    const need=3-ss.hexesToRemove.length;
+    svg+=`<rect x="4" y="4" width="${W-8}" height="36" rx="5" fill="rgba(80,0,0,0.85)" style="pointer-events:none"/>`;
+    svg+=`<text x="${W/2}" y="17" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="13" fill="#ff8080" style="pointer-events:none">REMOVE MODE — Click ${need} more hex tile${need!==1?'s':''} to trade in (${ss.hexesToRemove.length}/3 selected)</text>`;
+    svg+=`<text x="${W/2}" y="31" text-anchor="middle" font-family="Space Mono,monospace" font-size="8" fill="#cc6060" style="pointer-events:none">Click selected hexes again to deselect</text>`;
+    // Confirm / Cancel buttons
+    if(ss.hexesToRemove.length===3){
+      svg+=`<rect x="${W/2-90}" y="${H-46}" width="80" height="28" rx="4" fill="#cc2222" onclick="confirmHexRemoval()" style="cursor:pointer"/>`;
+      svg+=`<text x="${W/2-50}" y="${H-27}" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="13" fill="#fff" onclick="confirmHexRemoval()" style="cursor:pointer;pointer-events:none">✓ CONFIRM</text>`;
+    }
+    svg+=`<rect x="${W/2+10}" y="${H-46}" width="80" height="28" rx="4" fill="#1a1a1a" stroke="#333" onclick="cancelStageSelect()" style="cursor:pointer"/>`;
+    svg+=`<text x="${W/2+50}" y="${H-27}" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="13" fill="#888" onclick="cancelStageSelect()" style="cursor:pointer;pointer-events:none">✕ CANCEL</text>`;
+  }
+  if(isPlaceMode){
+    svg+=`<rect x="4" y="4" width="${W-8}" height="36" rx="5" fill="rgba(0,0,60,0.85)" style="pointer-events:none"/>`;
+    svg+=`<text x="${W/2}" y="17" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="13" fill="#8080ff" style="pointer-events:none">PLACE STAGE — Click a highlighted hex to anchor your new stage</text>`;
+    svg+=`<text x="${W/2}" y="31" text-anchor="middle" font-family="Space Mono,monospace" font-size="8" fill="#6666cc" style="pointer-events:none">Stage will auto-fit to available space</text>`;
+    svg+=`<rect x="${W/2-40}" y="${H-46}" width="80" height="28" rx="4" fill="#1a1a1a" stroke="#333" onclick="cancelStageSelect()" style="cursor:pointer"/>`;
+    svg+=`<text x="${W/2}" y="${H-27}" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="13" fill="#888" onclick="cancelStageSelect()" style="cursor:pointer;pointer-events:none">✕ CANCEL</text>`;
+  }
+
+  // Main stage mic icon
+  const tc=hcenter(STAGE[1].r, STAGE[1].c);
+  svg+=`<g transform="translate(${tc.x},${tc.y})" style="pointer-events:none">
+    <rect x="-5" y="-13" width="10" height="16" rx="5" fill="white" opacity="0.85"/>
+    <rect x="-1.5" y="3" width="3" height="7" fill="white" opacity="0.85"/>
+    <line x1="-5" y1="10" x2="5" y2="10" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.85"/>
+    <path d="M-8,0 Q-8,12 0,12" stroke="white" stroke-width="1.8" fill="none" opacity="0.85"/>
+    <path d="M8,0 Q8,12 0,12" stroke="white" stroke-width="1.8" fill="none" opacity="0.85"/>
+  </g>`;
+
+  // Mic icons on extra stages
+  for(let r2=0;r2<ROWS;r2++) for(let c2=0;c2<COLS;c2++){
+    const cell=p.grid[r2][c2];
+    if(cell.stg&&cell.extraStage){
+      const {x:ex,y:ey}=hcenter(r2,c2);
+      svg+=`<text x="${ex}" y="${ey+5}" text-anchor="middle" dominant-baseline="middle" font-size="14" fill="rgba(255,255,255,0.7)" style="pointer-events:none">🎪</text>`;
+    }
+  }
+
+  // Stage front bar — spans below the two front corner hexes (STAGE[0] and STAGE[2])
+  const sl=hcenter(STAGE[0].r, STAGE[0].c), sr=hcenter(STAGE[2].r, STAGE[2].c);
+  const bx=sl.x-S*0.8, bw=(sr.x+S*0.8)-bx;
+  const by=Math.max(sl.y,sr.y)+S*0.5;
+  svg+=`<rect x="${bx}" y="${by}" width="${bw}" height="${S*0.55}" rx="3" fill="#0d0d0d" opacity="0.9" style="pointer-events:none"/>`;
+  const tc2=hcenter(STAGE[1].r, STAGE[1].c);
+  svg+=`<text x="${tc2.x}" y="${by+S*0.55+11}" text-anchor="middle" font-family="Space Mono,monospace" font-size="7" fill="rgba(255,255,255,0.3)" style="pointer-events:none">TAP STAGE</text>`;
+
+  // Stage artist popup
+  const sel=G.selectedStage;
+  if(sel && sel.playerIdx===G.view){
+    const stageNames=['Main Stage','2nd Stage','3rd Stage'];
+    const si=sel.stageIdx;
+    const stageArr=p.stages[si]||[];
+    const ownedCount=p.stageCount||1;
+    const pw=bw+24; const px=bx-12; const py=by+S*0.5+10;
+    const rowH=34; const tabH=20; const ph=tabH+8+3*rowH+10;
+    svg+=`<rect x="${px}" y="${py}" width="${pw}" height="${ph}" rx="6" fill="#080808" stroke="#222" stroke-width="1.5" style="pointer-events:none"/>`;
+    const tabW=(pw-16)/ownedCount;
+    for(let t=0;t<ownedCount;t++){
+      const tx=px+8+t*tabW; const ty=py+4; const isActive=t===si;
+      svg+=`<rect x="${tx}" y="${ty}" width="${tabW-3}" height="${tabH}" rx="3" fill="${isActive?'#1a1a1a':'transparent'}" stroke="${isActive?'#333':'transparent'}" stroke-width="1" onclick="selectStageTab(${t})" style="cursor:pointer"/>`;
+      svg+=`<text x="${tx+tabW/2-1.5}" y="${ty+13}" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="11" fill="${isActive?'#e0e0e0':'#444'}" onclick="selectStageTab(${t})" style="cursor:pointer">${stageNames[t]}</text>`;
+    }
+    const divY=py+tabH+6;
+    svg+=`<line x1="${px+8}" y1="${divY}" x2="${px+pw-8}" y2="${divY}" stroke="#1a1a1a" stroke-width="1" style="pointer-events:none"/>`;
+    for(let slot=0;slot<3;slot++){
+      const art=stageArr[slot]; const isHeadliner=slot===2;
+      const ry=divY+4+slot*rowH;
+      const rowFill=isHeadliner?'rgba(255,214,0,0.07)':'rgba(255,255,255,0.015)';
+      const rowStroke=isHeadliner?'rgba(255,214,0,0.25)':'rgba(255,255,255,0.04)';
+      svg+=`<rect x="${px+6}" y="${ry}" width="${pw-12}" height="${rowH-3}" rx="3" fill="${rowFill}" stroke="${rowStroke}" stroke-width="1" style="pointer-events:none"/>`;
+      if(art){
+        const nameColor=isHeadliner?'#ffd600':'#d0d0d0';
+        const subColor=isHeadliner?'rgba(255,214,0,0.55)':'#484848';
+        svg+=`<text x="${px+14}" y="${ry+13}" font-family="Bebas Neue,sans-serif" font-size="14" fill="${nameColor}" style="pointer-events:none">${isHeadliner?'★ ':''}${art.name}</text>`;
+        svg+=`<text x="${px+14}" y="${ry+24}" font-family="Space Mono,monospace" font-size="7" fill="${subColor}" style="pointer-events:none">${art.genre}${isHeadliner?' · HEADLINER':' · Support'}</text>`;
+        svg+=`<text x="${px+pw-12}" y="${ry+15}" text-anchor="end" font-family="Bebas Neue,sans-serif" font-size="16" fill="${nameColor}" style="pointer-events:none">${art.vp}VP</text>`;
+      } else {
+        const emptyLabel=isHeadliner?'★ HEADLINER':'Support Act';
+        const emptyColor=isHeadliner?'rgba(255,214,0,0.18)':'rgba(255,255,255,0.08)';
+        const emptyStyle=isHeadliner?'font-family:Bebas Neue,sans-serif;font-size:11':'font-family:Space Mono,monospace;font-size:8';
+        svg+=`<text x="${px+pw/2}" y="${ry+rowH/2+1}" text-anchor="middle" ${emptyStyle} fill="${emptyColor}" style="pointer-events:none">${emptyLabel}</text>`;
+      }
+    }
+    svg+=`<text x="${px+pw-7}" y="${py+13}" text-anchor="end" font-family="Space Mono,monospace" font-size="9" fill="#555" onclick="closeStagePopup()" style="cursor:pointer">✕</text>`;
+  }
+
+  if(!isCur){
+    svg+=`<text x="${W/2}" y="${H-4}" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#444" letter-spacing="2">VIEWING ${p.name.toUpperCase()}</text>`;
+  }
+  svg+=`</svg>`;
+  el.innerHTML=svg;
+}
+
+function renderPool(){
+  const el=document.getElementById('apool');
+  const cp=G.players[G.cur];
+  const active=G.step==='artist';
+  document.getElementById('poolcount').textContent=`(${G.pool.length})`;
+  if(!G.pool.length){
+    el.innerHTML=`<div style="color:#333;font-size:10px;font-family:'Space Mono',monospace;grid-column:1/-1;padding:10px 0">Deck empty</div>`;
+    return;
+  }
+  const COST_TYPES=[{id:'camping',icon:'⛺'},{id:'security',icon:'🦺'},{id:'catering',icon:'🍔'},{id:'portaloo',icon:'🚽'}];
+  el.innerHTML=G.pool.map(a=>{
+    const met=Object.entries(a.reqs).every(([t,n])=>ca(cp,t)>=n);
+    const fameOk=fameAllowsStage(cp,a.stg);
+    const si=cp.stages.findIndex((arr,i)=>arr.length<3&&a.stg<=i+1&&!stageLocked(cp,i)&&fameAllowsStage(cp,a.stg));
+    const canBook=active&&met&&si!==-1&&fameOk;
+    const alreadyApproached=G.approaches.find(ap=>ap.artistId===a.id&&ap.bidders.includes(G.cur));
+    const canApproach=active&&!alreadyApproached;
+    const meeples=G.approaches.find(ap=>ap.artistId===a.id);
+
+    const costItems=COST_TYPES.map(ct=>{
+      const need=a.reqs[ct.id]||0; if(!need) return '';
+      const has=ca(cp,ct.id);
+      const cls=active?(has>=need?'met':'need'):'';
+      return`<span class="ach-cost-item ${cls}">${ct.icon}×${need}</span>`;
+    }).filter(Boolean).join('');
+    const costHtml=costItems
+      ?`<div class="ach-cost">${costItems}</div>`
+      :`<div class="ach-cost"><span style="font-size:7px;color:#aaa;font-family:'Space Mono',monospace">No reqs</span></div>`;
+
+    const eff=a.effect?getEffect(a.effect):null;
+    const effHtml=eff?`<div class="ach-eff" onmouseenter="showTip(event,'${a.effect.replace(/'/g,"\'")}')" onmouseleave="hideTip()"><span class="ach-eff-icon">${eff.icon||'✨'}</span><span class="ach-eff-name">${eff.name}</span></div>`:'';
+
+    const meepHtml=meeples&&meeples.bidders.length
+      ?`<div class="ach-meeples">${meeples.bidders.map(pi=>`<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${G.players[pi].color};border:1px solid rgba(255,255,255,.3)" title="${G.players[pi].name} approached"></span>`).join('')}</div>`
+      :`<div class="ach-meeples"></div>`;
+
+    const bookDis=!active||!canBook;
+    const apprDis=!active||!!alreadyApproached;
+    const btns=`<div class="ach-btns">
+      <button class="ach-btn" onclick="${!bookDis?`bookFromPool('${a.id}')`:''}" ${bookDis?'disabled':''}
+        style="background:${!bookDis?'var(--accent)':'#1a1a1a'};border-color:${!bookDis?'var(--accent)':'#2d2d2d'};color:${!bookDis?'#fff':'#444'}"
+        title="${!active?'Not your turn':!met?'Missing amenities':si===-1||!fameOk?'No valid stage':'Book now'}">🎤 Book</button>
+      <button class="ach-btn" onclick="${!apprDis?`approachArtist('${a.id}')`:''}" ${apprDis?'disabled':''}
+        style="background:${!apprDis?'rgba(255,214,0,0.09)':'#1a1a1a'};border-color:${!apprDis?'rgba(255,214,0,0.4)':'#2d2d2d'};color:${!apprDis?'#ffd600':'#444'}"
+        title="${alreadyApproached?'Already approached':'Approach — any fame ok, resolves next turn'}">${alreadyApproached?'🕴 Sent':'🕴 Approach'}</button>
+    </div>`;
+
+    const bord=canBook&&active?'border-color:rgba(232,92,0,0.5);box-shadow:0 0 8px rgba(232,92,0,0.12)':'';
+    return`<div class="acard-h ${alreadyApproached&&!canBook?'dim':''}" style="${bord}">
+      <div class="ach-name">${a.name}</div>
+      <div class="ach-genre">${a.genre} · S${a.stg}+ · ⭐${a.fame}</div>
+      <div class="ach-stats">
+        <div class="ach-stat"><div class="ach-stat-lbl">VP</div><div class="ach-stat-val vp">${a.vp}</div></div>
+        <div class="ach-stat"><div class="ach-stat-lbl">Fame</div><div class="ach-stat-val">${a.fame}</div></div>
+        <div class="ach-stat"><div class="ach-stat-lbl">🎫 Sales</div><div class="ach-stat-val tk">${a.tickets}</div></div>
+      </div>
+      ${costHtml}
+      ${effHtml}
+      ${meepHtml}
+      ${btns}
+    </div>`;
+  }).join('');
+}
+
+function renderHand(){
+  const cp=G.players[G.cur];
+  const mx=maxHand(cp);
+  const countEl=document.getElementById('handcount');
+  if(countEl) countEl.textContent=`(${cp.hand.length}/${mx})`;
+  const hintEl=document.getElementById('handplayhint');
+  const active=G.step==='artist';
+  const el=document.getElementById('handarea');
+  if(!el) return;
+
+  // Council bonus card (shown even when hand is empty — doesn't count toward hand limit)
+  let bonusCardHtml='';
+  if(cp.councilBonus){
+    bonusCardHtml=`<div class="hcard hcard-bonus" title="Council objective reward — already applied">
+      <div style="font-family:Space Mono,monospace;font-size:7px;letter-spacing:1.5px;color:rgba(255,214,0,0.6);text-transform:uppercase;margin-bottom:3px">🏅 Council Reward</div>
+      <div class="hcard-name" style="font-size:13px;color:#ffd600">${cp.councilBonus.objName}</div>
+      <div class="hcard-genre" style="color:rgba(255,214,0,0.5)">${cp.councilBonus.rewardLabel}</div>
+      <div style="font-family:Space Mono,monospace;font-size:7px;color:rgba(255,214,0,0.3);margin-top:6px;font-style:italic">Reward already applied ✓</div>
+    </div>`;
+  }
+
+  if(!cp.hand.length){
+    el.innerHTML=bonusCardHtml+`<div class="hcard-empty">No cards in hand — book an artist below or approach one to win it next turn</div>`;
+    if(hintEl) hintEl.textContent='';
+    return;
+  }
+
+  if(hintEl) hintEl.textContent = active ? 'Choose a stage to play each card →' : '';
+
+  el.innerHTML=bonusCardHtml+cp.hand.map(a=>{
+    const met=Object.entries(a.reqs).every(([t,n])=>ca(cp,t)>=n);
+
+    const stageBtns=cp.stages.map((arr,i)=>{
+      if(stageLocked(cp,i)) return'';
+      const canPlay=active&&met&&arr.length<3&&a.stg<=i+1&&fameAllowsStage(cp,a.stg);
+      return`<button class="hcard-play" onclick="playHand('${a.id}',${i})" ${canPlay?'':'disabled'} title="Play to Stage ${i+1}">S${i+1}</button>`;
+    }).filter(Boolean).join('');
+
+    const fameLock=!fameAllowsStage(cp,a.stg);
+    const eff=a.effect?getEffect(a.effect):null;
+    const effBadge=eff?`<div class="aceffect-badge" style="margin-bottom:6px" onmouseenter="showTip(event,'${a.effect.replace(/'/g,"\\'")}')" onmouseleave="hideTip()"><span class="aceffect-badge-icon">${eff.icon||'✨'}</span><span class="aceffect-badge-name">${eff.name}</span><span style="margin-left:auto;font-size:8px;opacity:0.4">?</span></div>`:'';
+
+    const COST_TYPES=[{id:'camping',icon:'⛺'},{id:'security',icon:'🦺'},{id:'catering',icon:'🍔'},{id:'portaloo',icon:'🚽'}];
+    const costItems=COST_TYPES.map(ct=>{
+      const need=a.reqs[ct.id]||0;
+      if(!need) return '';
+      const has=ca(cp,ct.id);
+      const cls=active?(has>=need?'met':'needed'):'';
+      return`<div class="accost-item ${cls}"><span class="accost-icon">${ct.icon}</span><span class="accost-val">×${need}</span></div>`;
+    }).filter(Boolean).join('');
+    const costRow=costItems?`<div class="accost-row" style="margin-bottom:6px">${costItems}</div>`:`<div style="font-size:8px;color:#aaa;font-family:'Space Mono',monospace;margin-bottom:6px">No reqs</div>`;
+
+    return`<div class="hcard" style="border-color:${active&&met&&!fameLock?'rgba(232,92,0,.4)':'transparent'}">
+      <div class="hcard-name">${a.name}</div>
+      <div class="hcard-genre">${a.genre} · ⭐${a.fame} · 🎫${a.tickets||'?'}</div>
+      ${costRow}
+      ${effBadge}
+      <div class="hcard-bot">
+        <div class="hcard-vp">${a.vp}VP</div>
+        <div style="display:flex;gap:3px">${active?(fameLock?`<span style="font-size:8px;color:#666;font-family:Space Mono,monospace">⭐Need Fame ${a.stg-1}</span>`:stageBtns||'<span style="font-size:8px;color:#666">no stage</span>'):'<span style="font-size:8px;color:#555;font-family:Space Mono,monospace">in hand</span>'}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderDice(){
+  const el=document.getElementById('dicerow');
+  const active=G.step==='amenity';
+  const left=G.dice.filter(d=>!d.used).length;
+  el.innerHTML=G.dice.map((d,i)=>{
+    const am=AMENITIES.find(a=>a.id===d.type);
+    const sel=G.selDie===i;
+    return`<div class="die ${d.used?'used':''} ${sel?'sel':''}" onclick="${!d.used&&active?'selectDie('+i+')':''}" title="${am.name}">${d.used?'·':am.icon}</div>`;
+  }).join('');
+  if(left<3) el.innerHTML+=`<button class="rerollbtn" onclick="reroll()">↻ Reroll (${left} left)</button>`;
+  const hint=document.getElementById('dicehint');
+  if(!active){
+    hint.innerHTML=`${left} die${left!==1?'s':''} available`;
+  } else if(G.selDie!==null){
+    const am=AMENITIES.find(a=>a.id===G.dice[G.selDie].type);
+    hint.innerHTML=`<span style="color:var(--accent2)">${am.icon} ${am.name}</span> — click a placed tile`;
+  } else {
+    hint.textContent='Select a die, then click a placed tile';
+  }
+}
+
+function renderInterRound(){
+  const el=document.getElementById('boardarea');
+  const p=G.players[G.cur];
+  const canBuy=(p.stageCount||1)<3 && p.tiles>=3;
+  const ir=G.interRound;
+  const isYearStart=ir&&ir.isYearStart;
+  const inStageSelect=G.stageSelect!==null;
+  if(inStageSelect){ renderFestival(el); return; }
+  el.innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:center;height:100%;padding:24px">
+      <div style="background:#111;border:1px solid #2d2d2d;border-radius:10px;padding:28px 32px;max-width:480px;width:100%;text-align:center">
+        <div style="font-size:12px;letter-spacing:2px;color:${isYearStart?'var(--accent2)':'var(--accent)'};font-family:Space Mono,monospace;margin-bottom:8px;text-transform:uppercase">${isYearStart?'🎪 New Year — Stage Buying':'🔔 Inter-Round'}</div>
+        <div style="font-size:9px;color:#555;font-family:Space Mono,monospace;margin-bottom:20px;line-height:1.6">${isYearStart?'Before the new season begins, each player may purchase additional stages.<br>Trade 3 hex tiles → 1 new stage (max 3 stages). Select which hexes to remove, then place your new stage on your festival site.':'Between rounds. Trade 3 hex tiles for an additional stage (max 3). Select which hexes to remove, then place the new stage.'}</div>
+        <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:20px">
+          ${G.players.map(pl=>{
+            const done=ir.playersDone.includes(pl.i);
+            const active=pl.i===G.cur;
+            return`<div style="background:${active?'rgba(255,92,0,.12)':'#1a1a1a'};border:1px solid ${active?'var(--accent)':'#2d2d2d'};border-radius:6px;padding:8px 12px;text-align:center;min-width:80px">
+              <div style="display:flex;align-items:center;gap:5px;margin-bottom:4px;justify-content:center">
+                <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${pl.color}"></span>
+                <span style="font-family:Space Mono,monospace;font-size:10px;color:${active?'#fff':'#888'}">${pl.name}</span>
+              </div>
+              <div style="font-size:9px;color:#666;font-family:Space Mono,monospace">⭐${pl.fame||0} · ${pl.tiles}⬡ · S${pl.stageCount||1}</div>
+              <div style="font-size:9px;color:${done?'#2ecc71':'#555'};margin-top:3px;font-weight:${done?700:400}">${done?'✓ done':'pending'}</div>
+            </div>`;
+          }).join('')}
+        </div>
+        <div style="background:#0d1a08;border:1px solid #2a3d20;border-radius:6px;padding:14px;margin-bottom:16px;text-align:left">
+          <div style="font-family:Bebas Neue,monospace;font-size:16px;color:#fff;margin-bottom:6px;letter-spacing:1px">${p.name}</div>
+          <div style="font-size:9px;color:#aaa;font-family:Space Mono,monospace">Tiles: <b style="color:#fff">${p.tiles}</b> &nbsp;·&nbsp; Stages: <b style="color:#fff">${p.stageCount||1}/3</b> &nbsp;·&nbsp; Fame: <b style="color:#fff">⭐${p.fame||0}</b></div>
+          ${(p.stageCount||1)>=3
+            ?`<div style="font-size:9px;color:#555;font-family:Space Mono,monospace;margin-top:6px">Already at max 3 stages.</div>`
+            :p.tiles<3
+            ?`<div style="font-size:9px;color:#ff6060;font-family:Space Mono,monospace;margin-top:6px">Need 3 hex tiles to buy a stage (you have ${p.tiles}).</div>`
+            :`<div style="font-size:9px;color:var(--accent2);font-family:Space Mono,monospace;margin-top:6px">✓ Can buy Stage ${(p.stageCount||1)+1}! Click Buy Stage, select 3 hexes to remove, then place your new stage.</div>`}
+        </div>
+        <div style="display:flex;gap:8px">
+          <button onclick="buyStage()" ${canBuy?'':'disabled'} style="flex:1;padding:11px;background:${canBuy?'var(--accent)':'#161616'};border:none;border-radius:5px;color:${canBuy?'#fff':'#3a3a3a'};font-family:Space Mono,monospace;font-size:10px;letter-spacing:1px;font-weight:700;cursor:${canBuy?'pointer':'not-allowed'};text-transform:uppercase">🎪 Buy Stage (−3 hexes)</button>
+          <button onclick="interRoundDone()" style="flex:1;padding:11px;background:#1a1a1a;border:1px solid #333;border-radius:5px;color:#aaa;font-family:Space Mono,monospace;font-size:10px;letter-spacing:1px;cursor:pointer;text-transform:uppercase">Pass →</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderYearSummary(){
+  const el=document.getElementById('boardarea');
+  const {summaries, isLast}=G.yearSummary;
+  const yr=isLast?3:G.year-1;
+  const multLabels=['×0.75','×1','×1.5','×2','×2.5','×3'];
+
+  // Sort summaries by ticket sales descending for display
+  const sorted=[...summaries].sort((a,b)=>b.total-a.total);
+
+  el.innerHTML=`
+    <div id="year-summary-wrap" style="position:relative;display:flex;align-items:flex-start;justify-content:center;min-height:100%;padding:20px 16px 32px;overflow-y:auto">
+      <canvas id="confetti-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9998"></canvas>
+      <div style="background:#080808;border:2px solid rgba(255,214,0,0.25);border-radius:14px;padding:28px 32px;max-width:660px;width:100%;position:relative;z-index:9999;box-shadow:0 0 60px rgba(255,214,0,0.06)">
+
+        <div style="text-align:center;margin-bottom:28px">
+          <div style="font-family:Bebas Neue,sans-serif;font-size:52px;letter-spacing:6px;color:var(--accent2);line-height:1;text-shadow:0 0 40px rgba(255,214,0,0.4)">YEAR ${yr}</div>
+          <div style="font-family:Bebas Neue,sans-serif;font-size:28px;letter-spacing:3px;color:var(--accent);margin-top:-4px">FESTIVAL COMPLETE!</div>
+          <div style="font-family:Space Mono,monospace;font-size:9px;color:#444;letter-spacing:2px;text-transform:uppercase;margin-top:8px">Season ${yr} Ticket Sales & VP Breakdown</div>
+        </div>
+
+        ${sorted.map((s,rank)=>{
+          const multLabel=multLabels[s.fameLvl]||'×1';
+          const isTopSeller=rank===0&&s.total>0;
+          const artists=s.player.stages.flat();
+          return`<div style="background:${isTopSeller?'rgba(255,214,0,0.04)':'#0e0e0e'};border:1px solid ${isTopSeller?'rgba(255,214,0,0.3)':'rgba(255,255,255,0.06)'};border-radius:10px;padding:18px 20px;margin-bottom:10px">
+            <!-- Header row -->
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+              <div style="width:12px;height:12px;border-radius:50%;background:${s.player.color};flex-shrink:0;box-shadow:0 0 8px ${s.player.color}55"></div>
+              <div style="font-family:Bebas Neue,sans-serif;font-size:22px;letter-spacing:1px;color:#fff;flex:1">${s.player.name}</div>
+              <div style="display:flex;align-items:center;gap:6px">
+                ${isTopSeller?`<div style="background:rgba(255,214,0,0.18);border:1px solid rgba(255,214,0,0.55);border-radius:20px;padding:3px 10px;font-family:Space Mono,monospace;font-size:8px;color:var(--accent2);font-weight:700">🏆 TOP SELLER</div>`:`<div style="font-family:Space Mono,monospace;font-size:9px;color:#444">#${rank+1}</div>`}
+                <div style="font-family:Space Mono,monospace;font-size:9px;color:#555;background:#1a1a1a;border-radius:4px;padding:2px 8px">⭐ Fame ${s.fameLvl}</div>
+              </div>
+            </div>
+
+            <!-- Artists booked this year -->
+            ${artists.length?`<div style="margin-bottom:12px">
+              <div style="font-family:Space Mono,monospace;font-size:7px;color:#444;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px">Artists Booked</div>
+              <div style="display:flex;flex-wrap:wrap;gap:4px">${artists.map(a=>`<span style="background:#181818;border:1px solid #252525;border-radius:3px;padding:3px 7px;font-family:Space Mono,monospace;font-size:8px;color:#888">${a.name} <b style="color:#aaa">🎫${a.tickets}</b></span>`).join('')}</div>
+            </div>`:''}
+
+            <!-- Calculation breakdown -->
+            <div style="background:#111;border-radius:6px;padding:12px 14px;margin-bottom:12px">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px">
+                <div style="background:#161616;border-radius:4px;padding:8px 10px">
+                  <div style="font-family:Space Mono,monospace;font-size:7px;color:#444;text-transform:uppercase;margin-bottom:3px">Artist Tickets</div>
+                  <div style="font-family:Bebas Neue,sans-serif;font-size:20px;color:#bbb">${s.artistTickets}</div>
+                </div>
+                <div style="background:#161616;border-radius:4px;padding:8px 10px">
+                  <div style="font-family:Space Mono,monospace;font-size:7px;color:#444;text-transform:uppercase;margin-bottom:3px">Camping (${ca(s.player,'camping')}×5)</div>
+                  <div style="font-family:Bebas Neue,sans-serif;font-size:20px;color:#bbb">${s.campTickets}</div>
+                </div>
+              </div>
+              <div style="font-family:Space Mono,monospace;font-size:9px;color:#555;display:flex;align-items:center;flex-wrap:wrap;gap:5px;border-top:1px solid #1a1a1a;padding-top:8px">
+                <span>Base: <b style="color:#aaa">${s.base}</b></span>
+                <span style="color:#333">→</span>
+                <span>Fame Lv.${s.fameLvl} <b style="color:#ffd600;font-size:11px">${multLabel}</b></span>
+                <span style="color:#333">→</span>
+                <span><b style="color:#ccc">${Math.round(s.afterFame)}</b></span>
+                ${s.forfeited>0?`<span style="color:#333">→</span><span style="color:#ff6060">−${s.forfeited} bids = <b>${s.total}</b></span>`:''}
+              </div>
+            </div>
+
+            <!-- Totals -->
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div>
+                <div style="font-family:Space Mono,monospace;font-size:7px;color:#444;text-transform:uppercase;margin-bottom:2px">🎫 Ticket Sales</div>
+                <div style="font-family:Bebas Neue,sans-serif;font-size:36px;color:var(--accent2);line-height:1">${s.total}</div>
+                ${isTopSeller&&s.bonusVP?`<div style="font-family:Space Mono,monospace;font-size:8px;color:var(--accent2);margin-top:2px">+${s.bonusVP}VP (1 per 10 tickets)</div>`:''}
+              </div>
+              <div style="text-align:right">
+                <div style="font-family:Space Mono,monospace;font-size:7px;color:#444;text-transform:uppercase;margin-bottom:2px">Total VP</div>
+                <div style="font-family:Bebas Neue,sans-serif;font-size:36px;color:var(--accent);line-height:1">${s.player.vp}</div>
+                ${s.vpLost?`<div style="font-family:Space Mono,monospace;font-size:8px;color:#ff4040;margin-top:2px">−3VP (overspent bids)</div>`:''}
+              </div>
+            </div>
+          </div>`;
+        }).join('')}
+
+        <button onclick="advanceFromYearSummary()" style="width:100%;margin-top:12px;padding:16px;background:var(--accent);border:none;border-radius:8px;color:#fff;font-family:Bebas Neue,sans-serif;font-size:22px;letter-spacing:4px;cursor:pointer;transition:all .15s;box-shadow:0 4px 20px rgba(232,92,0,0.3)" onmouseover="this.style.background='#c94d00'" onmouseout="this.style.background='var(--accent)'">
+          ${isLast ? '🏆 END GAME — SEE FINAL RESULTS' : '🎪 BEGIN YEAR '+(yr+1)+' →'}
+        </button>
+      </div>
+    </div>`;
+  // Launch confetti!
+  launchConfetti();
+}
+
+function renderStages(el){
+  const stageNames=['Main Stage','2nd Stage','3rd Stage'];
+  let h=`<div style="width:100%;padding:4px 0">`;
+
+  // Player switcher tabs
+  h+=`<div style="display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap">`;
+  G.players.forEach(p=>{
+    const active=G.view===p.i;
+    h+=`<div onclick="setView(${p.i})" style="cursor:pointer;padding:4px 10px;border-radius:3px;font-family:Space Mono,monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;background:${active?p.color+'22':'transparent'};border:1px solid ${active?p.color:'#222'};color:${active?p.color:'#444'}">${p.name}</div>`;
+  });
+  h+=`</div>`;
+
+  const p=G.players[G.view];
+  const ownedCount=p.stageCount||1;
+
+  // Heading row
+  h+=`<div style="display:flex;gap:8px;margin-bottom:4px;font-family:Space Mono,monospace;font-size:8px;color:#333;letter-spacing:1.5px;text-transform:uppercase">`;
+  h+=`<div style="flex:0 0 70px">⭐ FAME ${p.fame||0}</div>`;
+  h+=`<div style="flex:1">${p.stages.flat().length} artist${p.stages.flat().length!==1?'s':''} booked</div>`;
+  h+=`</div>`;
+
+  // Stage columns
+  h+=`<div style="display:flex;gap:8px;align-items:flex-start">`;
+  for(let si=0;si<3;si++){
+    const arr=p.stages[si]||[];
+    const locked=stageLocked(p,si);
+    const fameLocked=!locked&&arr.length===0&&!fameAllowsStage(p,si+1);
+
+    h+=`<div style="flex:1;min-width:0;border:1px solid ${locked?'#111':fameLocked?'#1a1a1a':'#1e1e1e'};border-radius:6px;overflow:hidden;opacity:${locked?'0.3':fameLocked?'0.5':'1'}">`;
+
+    // Stage header
+    const hdrBg=locked?'#0c0c0c':'#111';
+    h+=`<div style="background:${hdrBg};padding:7px 10px 6px;border-bottom:1px solid #1a1a1a">`;
+    h+=`<div style="font-family:Bebas Neue,sans-serif;font-size:15px;color:${locked?'#333':fameLocked?'#333':'#c0c0c0'}">${stageNames[si]}</div>`;
+    h+=`<div style="font-family:Space Mono,monospace;font-size:7px;color:${locked?'#252525':fameLocked?'#2a2a2a':'#383838'};margin-top:1px">${locked?'🔒 3 HEXES TO UNLOCK':fameLocked?`⭐ NEED FAME ${si}+`:arr.length+'/3 BOOKED'}</div>`;
+    h+=`</div>`;
+
+    // 3 artist slots (top = support 1, middle = support 2, bottom = headliner)
+    for(let slot=0;slot<3;slot++){
+      const art=arr[slot];
+      const isHeadliner=slot===2;
+      const slotBg=isHeadliner?'rgba(255,214,0,0.05)':'transparent';
+      const slotBorder=isHeadliner?'border-top:1px solid rgba(255,214,0,0.12)':'border-top:1px solid #0f0f0f';
+      h+=`<div style="background:${slotBg};${slotBorder};padding:8px 10px">`;
+      if(art){
+        const nameColor=isHeadliner?'#ffd600':'#b0b0b0';
+        const subColor=isHeadliner?'rgba(255,214,0,0.5)':'#383838';
+        h+=`<div style="display:flex;justify-content:space-between;align-items:baseline;gap:4px">`;
+        h+=`<div style="font-family:Bebas Neue,sans-serif;font-size:${isHeadliner?15:13}px;color:${nameColor};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${isHeadliner?'★ ':''}${art.name}</div>`;
+        h+=`<div style="font-family:Bebas Neue,sans-serif;font-size:${isHeadliner?14:12}px;color:${nameColor};flex-shrink:0">${art.vp}VP</div>`;
+        h+=`</div>`;
+        h+=`<div style="font-family:Space Mono,monospace;font-size:7px;color:${subColor};margin-top:1px">${art.genre}${isHeadliner?' · HEADLINER':' · Support'}</div>`;
+      } else {
+        const emptyLabel=isHeadliner?'★ HEADLINER':'Support Act';
+        const emptyColor=isHeadliner?'rgba(255,214,0,0.15)':'rgba(255,255,255,0.06)';
+        const emptySize=isHeadliner?10:9;
+        h+=`<div style="font-family:${isHeadliner?'Bebas Neue':'Space Mono'},${isHeadliner?'sans':'monospace'}-serif;font-size:${emptySize}px;color:${emptyColor};padding:2px 0">${emptyLabel}</div>`;
+      }
+      h+=`</div>`;
+    }
+    h+=`</div>`;
+  }
+  h+=`</div>`;
+
+  el.innerHTML=h+`</div>`;
+}
+
+function renderObjectives(el){
+  const cp=G.players[G.cur];
+  let h=`<div style="max-width:460px;width:100%">`;
+
+  // ── Council objective (private to current player) ──
+  h+=`<div style="font-family:Space Mono,monospace;font-size:9px;color:#444;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">🏅 Your Council Objective</div>`;
+  if(cp.councilObj){
+    const done=cp.councilDone;
+    h+=`<div class="objcard" style="border-color:${done?'#2ecc71':'#252550'}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+        <div style="flex:1"><div class="objname">${cp.councilObj.name}</div><div class="objdesc">${cp.councilObj.desc}</div></div>
+        <div style="text-align:right;flex-shrink:0">
+          <div class="objvp" style="font-size:9px">${cp.councilObj.reward.replace('_per:','/').replace('tickets','🎟️').replace('vp','VP').replace('fame','⭐')}</div>
+          ${done?'<div style="font-size:9px;color:#2ecc71;font-family:Space Mono,monospace;margin-top:3px">✓ Complete</div>':''}
+        </div>
+      </div>
+    </div>`;
+  }
+  // Past council objectives
+  if(cp.councilHistory&&cp.councilHistory.length>0){
+    h+=`<div style="font-size:9px;color:#333;font-family:Space Mono,monospace;margin:8px 0 6px">Past objectives:</div>`;
+    cp.councilHistory.forEach(o=>{
+      h+=`<div style="font-size:9px;font-family:Space Mono,monospace;color:${o.completed?'#2ecc71':'#444'};margin-bottom:2px">${o.completed?'✓':'○'} ${o.name}</div>`;
+    });
+  }
+
+  // ── Legacy objectives (public, 2 per game) ──
+  h+=`<div style="font-family:Space Mono,monospace;font-size:9px;color:#444;letter-spacing:1.5px;text-transform:uppercase;margin:18px 0 10px">🏆 Legacy Objectives</div>`;
+  G.legacyObjs.forEach(o=>{
+    const claimedBy=o.claimed.map(i=>G.players[i]);
+    h+=`<div class="objcard" style="border-color:${claimedBy.length?'#ffd600':'#252550'}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+        <div style="flex:1"><div class="objname">${o.name}</div><div class="objdesc">${o.desc}</div></div>
+        <div style="text-align:right;flex-shrink:0">
+          <div class="objvp" style="font-size:9px">${o.reward.replace('tickets','🎟️').replace('fame','⭐ Fame').replace('vp','VP')}</div>
+          <div style="font-size:8px;font-family:Space Mono,monospace;color:#555;margin-top:2px">All who qualify</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:3px;flex-wrap:wrap;margin-top:8px">
+        ${G.players.map(p=>{
+          const met=o.fn(p);
+          const claimed=o.claimed.includes(p.i);
+          return`<div style="font-size:9px;font-family:Space Mono,monospace;background:${claimed?'rgba(255,214,0,.1)':met?'rgba(46,204,113,.08)':'rgba(255,255,255,.02)'};border:1px solid ${claimed?'#ffd600':met?'#2ecc71':'#2d2d2d'};border-radius:2px;padding:2px 6px;color:${claimed?'#ffd600':met?'#2ecc71':'#444'}">${claimed?'🏆':met?'✓':'○'} ${p.name}</div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  });
+  el.innerHTML=h+`</div>`;
+}
+
+function renderObjectivesSidebar(){
+  const cp=G.players[G.cur];
+  const cEl=document.getElementById('obj-council-panel');
+  const lEl=document.getElementById('obj-legacy-panel');
+  if(!cEl||!lEl) return;
+
+  // Council obj
+  if(cp.councilObj){
+    const done=cp.councilDone;
+    const rewardStr=rewardLabel(cp.councilObj.reward);
+    cEl.innerHTML=`<div class="obj-council" style="border-color:${done?'rgba(255,214,0,0.4)':'#252550'};background:${done?'rgba(255,214,0,0.04)':'transparent'}">
+      <div class="obj-name" style="color:${done?'#ffd600':'var(--accent2)'}">${done?'✓ ':''} ${cp.councilObj.name}</div>
+      <div class="obj-desc">${cp.councilObj.desc}</div>
+      <div class="obj-reward" style="color:${done?'#ffd600':'var(--accent)'}">${rewardStr}</div>
+      ${done?'<div style="font-size:8px;color:rgba(255,214,0,0.5);font-family:Space Mono,monospace;margin-top:5px;font-style:italic">Reward applied · bonus shown in hand</div>':''}
+    </div>`;
+  } else {
+    cEl.innerHTML=`<div style="font-size:9px;color:#333;font-family:Space Mono,monospace">None assigned yet</div>`;
+  }
+
+  // Legacy objs
+  lEl.innerHTML=G.legacyObjs.map(o=>{
+    const claimedBy=o.claimed.map(i=>G.players[i]);
+    return`<div class="obj-legacy" style="border-color:${claimedBy.length?'rgba(255,214,0,.4)':'#2d2d2d'}">
+      <div class="obj-name" style="color:${claimedBy.length?'#ffd600':'var(--accent2)'}">🏆 ${o.name}</div>
+      <div class="obj-desc">${o.desc}</div>
+      <div class="obj-reward">${o.reward.replace('tickets','🎟️').replace('fame','⭐').replace('vp','VP')}</div>
+      <div class="obj-progress">
+        ${G.players.map(p=>{
+          const claimed=o.claimed.includes(p.i);
+          const met=o.fn(p);
+          return`<div class="obj-pip ${claimed?'claimed':met?'met':''}">${claimed?'🏆':met?'✓':'○'} ${p.name}</div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderRules(el){
+  el.innerHTML=`<div style="max-width:480px;font-size:12px;line-height:1.9;color:#888">
+    <div style="font-family:Bebas Neue,sans-serif;font-size:28px;color:var(--cream);margin-bottom:14px;letter-spacing:2px">HOW TO PLAY</div>
+    <p style="margin-bottom:11px"><b style="color:var(--cream)">Goal:</b> Most Victory Points after 3 Years. VP comes from Artist bookings, Council Objectives, and Legacy Objectives.</p>
+    <p style="color:var(--accent2);font-family:Space Mono,monospace;font-size:9px;letter-spacing:2px;margin-bottom:5px">EACH TURN</p>
+    <ol style="margin-left:15px;margin-bottom:14px;color:#aaa">
+      <li style="margin-bottom:5px"><b style="color:var(--cream)">Place 1 Hex Tile</b> — Click a glowing hex adjacent to your festival.</li>
+      <li style="margin-bottom:5px"><b style="color:var(--cream)">Place an Amenity Die</b> — Select a die, then click your new tile. ⛺ Camping gives 2 bonus tiles.</li>
+      <li style="margin-bottom:5px"><b style="color:var(--cream)">Book an Artist (optional)</b> — If reqs met, book directly to stage. Otherwise, Approach them (your agent goes on the card) and bid on your next turn.</li>
+    </ol>
+    <p style="color:var(--accent2);font-family:Space Mono,monospace;font-size:9px;letter-spacing:2px;margin-bottom:5px">FAME ⭐</p>
+    <p style="margin-bottom:11px">Fame gates which artists you can book. Fame 0 = Stage 1 only. Fame 1 = Stage 1–2. Fame 2+ = all stages. Gain Fame by filling stages 2 & 3, and from Legacy Objectives.</p>
+    <p style="color:var(--accent2);font-family:Space Mono,monospace;font-size:9px;letter-spacing:2px;margin-bottom:5px">STAGES & INTER-ROUND</p>
+    <p style="margin-bottom:11px">You start with 1 stage. After every full round, an Inter-Round phase lets each player trade 3 hex tiles for a new stage (max 3). Each new stage also grants +1 Fame.</p>
+    <p style="color:var(--accent2);font-family:Space Mono,monospace;font-size:9px;letter-spacing:2px;margin-bottom:5px">OBJECTIVES</p>
+    <p style="margin-bottom:11px"><b style="color:var(--cream)">Council (private):</b> Personal tile/amenity goals. Reward VP or Amenity Powers.<br><b style="color:var(--cream)">Legacy (public):</b> Competitive goals visible to all. First to complete wins VP, Fame, or Tickets.</p>
+    <p style="color:var(--accent2);font-family:Space Mono,monospace;font-size:9px;letter-spacing:2px;margin-bottom:5px">TICKETS 🎟️</p>
+    <p>Used for artist bidding. Earned from Legacy Objectives and certain artists — not automatically each turn.</p>
+  </div>`;
+}
+
+function renderLog(){
+  const el=document.getElementById('logarea');
+  el.innerHTML=G.logs.slice(-12).reverse().map(l=>`<div class="logline">${l}</div>`).join('');
+}
+
+// ════════════════════════════════════════
+//  SOUND SYSTEM
+// ════════════════════════════════════════
+let _audioCtx = null;
+function getACtx(){ if(!_audioCtx) _audioCtx=new(window.AudioContext||window.webkitAudioContext)(); return _audioCtx; }
+
+function playShuffle(){
+  try{
+    const ac=getACtx();
+    // White noise burst (card shuffle feel)
+    const buf=ac.createBuffer(1,ac.sampleRate*0.35,ac.sampleRate);
+    const d=buf.getChannelData(0);
+    for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,1.2);
+    const src=ac.createBufferSource(); src.buffer=buf;
+    const g=ac.createGain(); g.gain.setValueAtTime(0.22,ac.currentTime); g.gain.exponentialRampToValueAtTime(0.001,ac.currentTime+0.35);
+    const f=ac.createBiquadFilter(); f.type='bandpass'; f.frequency.value=3000; f.Q.value=0.5;
+    src.connect(f); f.connect(g); g.connect(ac.destination);
+    src.start(); src.stop(ac.currentTime+0.35);
+    // Second burst slightly offset
+    setTimeout(()=>{
+      try{
+        const buf2=ac.createBuffer(1,ac.sampleRate*0.25,ac.sampleRate);
+        const d2=buf2.getChannelData(0);
+        for(let i=0;i<d2.length;i++) d2[i]=(Math.random()*2-1)*Math.pow(1-i/d2.length,1.5);
+        const s2=ac.createBufferSource(); s2.buffer=buf2;
+        const g2=ac.createGain(); g2.gain.setValueAtTime(0.15,ac.currentTime); g2.gain.exponentialRampToValueAtTime(0.001,ac.currentTime+0.25);
+        const f2=ac.createBiquadFilter(); f2.type='bandpass'; f2.frequency.value=4000; f2.Q.value=0.5;
+        s2.connect(f2); f2.connect(g2); g2.connect(ac.destination);
+        s2.start(); s2.stop(ac.currentTime+0.25);
+      }catch(e){}
+    },110);
+  }catch(e){}
+}
+
+function playRegister(){
+  try{
+    const ac=getACtx();
+    // Cash register: mechanical click + bell ping
+    [0,0.06,0.12].forEach((t,i)=>{
+      const o=ac.createOscillator(); o.type='square';
+      o.frequency.setValueAtTime(i===2?1800:800,ac.currentTime+t);
+      const g=ac.createGain(); g.gain.setValueAtTime(i===2?0.12:0.08,ac.currentTime+t);
+      g.gain.exponentialRampToValueAtTime(0.001,ac.currentTime+t+0.08);
+      o.connect(g); g.connect(ac.destination); o.start(ac.currentTime+t); o.stop(ac.currentTime+t+0.1);
+    });
+    // Bell
+    setTimeout(()=>{
+      try{
+        const o=ac.createOscillator(); o.type='sine'; o.frequency.value=2400;
+        const g=ac.createGain(); g.gain.setValueAtTime(0.2,ac.currentTime); g.gain.exponentialRampToValueAtTime(0.001,ac.currentTime+0.5);
+        o.connect(g); g.connect(ac.destination); o.start(); o.stop(ac.currentTime+0.55);
+      }catch(e){}
+    },150);
+  }catch(e){}
+}
+
+function playDing(){
+  try{
+    const ac=getACtx();
+    // Positive ding — rising two-tone chime
+    [[880,0],[1100,0.08],[1320,0.16]].forEach(([freq,t])=>{
+      const o=ac.createOscillator(); o.type='sine'; o.frequency.value=freq;
+      const g=ac.createGain(); g.gain.setValueAtTime(0,ac.currentTime+t);
+      g.gain.linearRampToValueAtTime(0.18,ac.currentTime+t+0.02);
+      g.gain.exponentialRampToValueAtTime(0.001,ac.currentTime+t+0.4);
+      o.connect(g); g.connect(ac.destination); o.start(ac.currentTime+t); o.stop(ac.currentTime+t+0.42);
+    });
+  }catch(e){}
+}
+
+// ════════════════════════════════════════
+//  TOAST NOTIFICATIONS
+// ════════════════════════════════════════
+let _toastTimer=null;
+function showToast(msg, type='default', icon='', duration=3200){
+  const c=document.getElementById('toast-container'); if(!c) return;
+  const t=document.createElement('div');
+  t.className=`toast ${type}`;
+  t.innerHTML=`${icon?`<span class="toast-icon">${icon}</span>`:''}${msg}`;
+  c.appendChild(t);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>t.classList.add('show')));
+  setTimeout(()=>{
+    t.classList.remove('show');
+    setTimeout(()=>t.remove(),300);
+  },duration);
+}
+
+// ════════════════════════════════════════
+//  HANDOFF OVERLAY
+// ════════════════════════════════════════
+let _handoffCallback=null;
+function showHandoff(playerIdx, turnNum, callback){
+  const p=G.players[playerIdx];
+  const overlay=document.getElementById('handoff-overlay');
+  const nameEl=document.getElementById('handoff-name');
+  const turnEl=document.getElementById('handoff-turn');
+  const subEl=document.getElementById('handoff-sub');
+  if(!overlay) return callback();
+  nameEl.textContent=p.name;
+  nameEl.style.color=p.color;
+  turnEl.textContent=`TURN ${turnNum}`;
+  subEl.textContent='YOUR TURN';
+  _handoffCallback=callback;
+  overlay.classList.add('show');
+}
+function dismissHandoff(){
+  const overlay=document.getElementById('handoff-overlay');
+  if(overlay) overlay.classList.remove('show');
+  if(_handoffCallback){ const cb=_handoffCallback; _handoffCallback=null; setTimeout(cb,200); }
+}
+
+</script>
+</body>
+</html>
