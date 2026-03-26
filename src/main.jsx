@@ -1,0 +1,1 @@
+import React from 'react'; import ReactDOM from 'react-dom/client'; import Headliners from './Headliners.jsx'; ReactDOM.createRoot(document.getElementById('root')).render(<React.StrictMode><Headliners /></React.StrictMode>);
